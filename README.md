@@ -3,9 +3,6 @@ This is a friendly fun project created after going through the pain of building 
 
 This can be used as the dashboard for a fun social leaderboard between friends.
 
-# Preview
-[View live preview](https://anoobbacker.github.io/leaderboard-supabase-svelte)
-
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
