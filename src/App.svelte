@@ -1,0 +1,50 @@
+<script lang="ts">
+  import Navigation from "./lib/Navigation.svelte";
+  import Header from "./lib/Header.svelte";
+  import LeaderBoards from "./lib/LeaderBoards.svelte";
+  import Avatars from "./lib/Avatars.svelte";
+  import Footer from "./lib/Footer.svelte";
+  import { storeCurrentPage } from "./store";
+  import Predict from "./lib/Predict.svelte";
+
+  import { onMount } from 'svelte'
+  import { supabase } from './supabaseClient'
+  import type { AuthSession } from '@supabase/supabase-js'
+  import Login from "./lib/Login.svelte";
+  import {storeLoggedUID} from "./store"
+
+  let currentPage;
+  storeCurrentPage.subscribe(value => {
+		currentPage = value;
+	});
+
+  let session: AuthSession
+
+  onMount(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      session = data.session
+      storeLoggedUID.set(session?.user?.id);
+    })
+
+    supabase.auth.onAuthStateChange((_event, _session) => {
+      session = _session
+    })
+  })
+</script>
+
+<Navigation />
+
+{#if !session}
+<!-- Show login page if not authenticated -->
+<Login />
+{:else if currentPage === 'Predict'}
+  <!-- Show prediction page -->
+  <Predict {session} />
+{:else}
+  <!-- Load leaderboard -->
+  <Header />
+  <LeaderBoards />
+{/if}
+
+<Avatars />
+<Footer />

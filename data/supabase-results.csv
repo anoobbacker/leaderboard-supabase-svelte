@@ -1,0 +1,101 @@
+id,created_at,tournament,matchnumber,teama,teamb,status,resulta,resultb,stadium,matchdate,user_id
+1,2022-11-20 11:21:17.843408+00,World Cup 2018,1,Russia,Saudi Arabia,Complete,5,0,Luzhniki,14 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+2,2022-11-20 11:21:17.843408+00,World Cup 2018,2,Uruguay,Egypt,Complete,1,0,Ekaterinburg Arena,15 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+3,2022-11-20 11:21:17.843408+00,World Cup 2018,3,Morocco,Iran,Complete,0,1,Saint Petersburg,15 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+4,2022-11-20 11:21:17.843408+00,World Cup 2018,4,Spain,Portugal,Complete,3,3,Fisht,15 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+5,2022-11-20 11:21:17.843408+00,World Cup 2018,5,France,Australia,Complete,2,1,Kazan Arena,16 Jun 2018 - 13:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+6,2022-11-20 11:21:17.843408+00,World Cup 2018,6,Denmark,Peru,Complete,1,0,Spartak,16 Jun 2018 - 16:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+7,2022-11-20 11:21:17.843408+00,World Cup 2018,7,Argentina,Iceland,Complete,1,1,Mordovia Arena,16 Jun 2018 - 19:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+8,2022-11-20 11:21:17.843408+00,World Cup 2018,8,Croatia,Nigeria,Complete,2,0,Kaliningrad,16 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+9,2022-11-20 11:21:17.843408+00,World Cup 2018,9,Costa Rica,Serbia,Complete,0,1,Samara Arena,17 Jun 2018 - 16:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+10,2022-11-20 11:21:17.843408+00,World Cup 2018,10,Brazil,Switzerland,Complete,1,1,Luzhniki,17 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+11,2022-11-20 11:21:17.843408+00,World Cup 2018,11,Germany,Mexico,Complete,0,1,Rostov Arena,17 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+12,2022-11-20 11:21:17.843408+00,World Cup 2018,12,Sweden,South Korea,Complete,1,0,Nizhny Novgorod,18 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+13,2022-11-20 11:21:17.843408+00,World Cup 2018,13,Belgium,Panama,Complete,3,0,Fisht,18 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+14,2022-11-20 11:21:17.843408+00,World Cup 2018,14,England,Tunisia,Complete,2,1,Volgograd Arena,18 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+15,2022-11-20 11:21:17.843408+00,World Cup 2018,15,Colombia,Japan,Complete,1,2,Mordovia Arena,19 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+16,2022-11-20 11:21:17.843408+00,World Cup 2018,16,Poland,Senegal,Complete,1,2,Spartak,19 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+17,2022-11-20 11:21:17.843408+00,World Cup 2018,17,Russia,Egypt,Complete,3,1,Saint Petersburg,19 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+18,2022-11-20 11:21:17.843408+00,World Cup 2018,18,Uruguay,Saudi Arabia,Complete,1,0,Luzhniki,20 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+19,2022-11-20 11:21:17.843408+00,World Cup 2018,19,Portugal,Morocco,Complete,1,0,Rostov Arena,20 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+20,2022-11-20 11:21:17.843408+00,World Cup 2018,20,Iran,Spain,Complete,0,1,Kazan Arena,20 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+21,2022-11-20 11:21:17.843408+00,World Cup 2018,21,Denmark,Australia,Complete,1,1,Samara Arena,21 Jun 2018 - 16:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+22,2022-11-20 11:21:17.843408+00,World Cup 2018,22,France,Peru,Complete,1,0,Ekaterinburg Arena,21 Jun 2018 - 20:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+23,2022-11-20 11:21:17.843408+00,World Cup 2018,23,Argentina,Croatia,Complete,0,3,Nizhny Novgorod,21 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+24,2022-11-20 11:21:17.843408+00,World Cup 2018,24,Nigeria,Iceland,Complete,2,0,Saint Petersburg,22 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+25,2022-11-20 11:21:17.843408+00,World Cup 2018,25,Brazil,Costa Rica,Complete,2,0,Volgograd Arena,22 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+26,2022-11-20 11:21:17.843408+00,World Cup 2018,26,Serbia,Switzerland,Complete,1,2,Kaliningrad,22 Jun 2018 - 20:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+27,2022-11-20 11:21:17.843408+00,World Cup 2018,27,South Korea,Mexico,Complete,1,2,Spartak,23 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+28,2022-11-20 11:21:17.843408+00,World Cup 2018,28,Germany,Sweden,Complete,2,1,Rostov Arena,23 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+29,2022-11-20 11:21:17.843408+00,World Cup 2018,29,Belgium,Tunisia,Complete,5,2,Fisht,23 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+30,2022-11-20 11:21:17.843408+00,World Cup 2018,30,England,Panama,Complete,6,1,Nizhny Novgorod,24 Jun 2018 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+31,2022-11-20 11:21:17.843408+00,World Cup 2018,31,Japan,Senegal,Complete,2,2,Ekaterinburg Arena,24 Jun 2018 - 20:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+32,2022-11-20 11:21:17.843408+00,World Cup 2018,32,Poland,Colombia,Complete,0,3,Kazan Arena,24 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+33,2022-11-20 11:21:17.843408+00,World Cup 2018,33,Uruguay,Russia,Complete,3,0,Samara Arena,25 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+34,2022-11-20 11:21:17.843408+00,World Cup 2018,34,Saudi Arabia,Egypt,Complete,1,1,Volgograd Arena,25 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+35,2022-11-20 11:21:17.843408+00,World Cup 2018,35,Iran,Portugal,Complete,1,1,Kaliningrad,25 Jun 2018 - 20:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+36,2022-11-20 11:21:17.843408+00,World Cup 2018,36,Spain,Morocco,Complete,2,2,Mordovia Arena,25 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+37,2022-11-20 11:21:17.843408+00,World Cup 2018,37,Denmark,France,Complete,0,0,Fisht,26 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+38,2022-11-20 11:21:17.843408+00,World Cup 2018,38,Australia,Peru,Complete,0,2,Luzhniki,26 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+39,2022-11-20 11:21:17.843408+00,World Cup 2018,39,Nigeria,Argentina,Complete,1,2,Saint Petersburg,26 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+40,2022-11-20 11:21:17.843408+00,World Cup 2018,40,Iceland,Croatia,Complete,1,2,Rostov Arena,26 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+41,2022-11-20 11:21:17.843408+00,World Cup 2018,41,Serbia,Brazil,Complete,0,2,Kazan Arena,27 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+42,2022-11-20 11:21:17.843408+00,World Cup 2018,42,Switzerland,Costa Rica,Complete,2,2,Ekaterinburg Arena,27 Jun 2018 - 19:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+43,2022-11-20 11:21:17.843408+00,World Cup 2018,43,Korea Republic,Germany,Complete,2,0,Spartak,27 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+44,2022-11-20 11:21:17.843408+00,World Cup 2018,44,Mexico,Sweden,Complete,0,3,Nizhny Novgorod,27 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+45,2022-11-20 11:21:17.843408+00,World Cup 2018,45,England,Belgium,Complete,0,1,Volgograd Arena,28 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+46,2022-11-20 11:21:17.843408+00,World Cup 2018,46,Panama,Tunisia,Complete,1,2,Samara Arena,28 Jun 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+47,2022-11-20 11:21:17.843408+00,World Cup 2018,47,Japan,Poland,Complete,0,1,Mordovia Arena,28 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+48,2022-11-20 11:21:17.843408+00,World Cup 2018,48,Senegal,Colombia,Complete,0,1,Kaliningrad,28 Jun 2018 - 20:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+49,2022-11-20 11:21:17.843408+00,World Cup 2018,49,Uruguay,Portugal,Complete,2,1,Kazan Arena,30 Jun 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+50,2022-11-20 11:21:17.843408+00,World Cup 2018,50,France,Argentina,Complete,4,3,Fisht,30 Jun 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+51,2022-11-20 11:21:17.843408+00,World Cup 2018,51,Brazil,Mexico,Complete,2,0,Luzhniki,01 Jul 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+52,2022-11-20 11:21:17.843408+00,World Cup 2018,52,Belgium,Japan,Complete,3,2,Nizhny Novgorod,01 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+53,2022-11-20 11:21:17.843408+00,World Cup 2018,53,Spain,Russia,Complete,4,5,Samara Arena,02 Jul 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+54,2022-11-20 11:21:17.843408+00,World Cup 2018,54,Croatia,Denmark,Complete,4,3,Rostov Arena,02 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+55,2022-11-20 11:21:17.843408+00,World Cup 2018,55,Sweden,Switzerland,Complete,1,0,Saint Petersburg,03 Jul 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+56,2022-11-20 11:21:17.843408+00,World Cup 2018,56,Colombia,England,Complete,4,5,Spartak,03 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+57,2022-11-20 11:21:17.843408+00,World Cup 2018,57,Uruguay,France,Complete,0,2,Nizhny Novgorod,06 Jul 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+58,2022-11-20 11:21:17.843408+00,World Cup 2018,58,Brazil,Belgium,Complete,1,2,Kazan Arena,06 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+59,2022-11-20 11:21:17.843408+00,World Cup 2018,59,Sweden,England,Complete,0,2,Samara Arena,07 Jul 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+60,2022-11-20 11:21:17.843408+00,World Cup 2018,60,Russia,Croatia,Complete,5,6,Fisht,07 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+61,2022-11-20 11:21:17.843408+00,World Cup 2018,61,Belgium,France,Complete,0,1,Saint Petersburg,10 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+62,2022-11-20 11:21:17.843408+00,World Cup 2018,62,England,Croatia,Complete,1,2,Luzhniki,11 Jul 2018 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+63,2022-11-20 11:21:17.843408+00,World Cup 2018,63,Belgium,England,Complete,2,0,Saint Petersburg,14 Jul 2018 - 17:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+64,2022-11-20 11:21:17.843408+00,World Cup 2018,64,France,Croatia,Complete,4,2,Luzhniki,15 Jul 2018 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+65,2022-11-20 11:21:17.843408+00,Euro Cup 2020,1,Turkey,Italy,Complete,0,3,,11 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+66,2022-11-20 11:21:17.843408+00,Euro Cup 2020,2,Wales,Switzerland,Complete,1,1,,12 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+67,2022-11-20 11:21:17.843408+00,Euro Cup 2020,3,Denmark,Finland,Complete,0,1,,12 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+68,2022-11-20 11:21:17.843408+00,Euro Cup 2020,4,Belgium,Russia,Complete,3,0,,12 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+69,2022-11-20 11:21:17.843408+00,Euro Cup 2020,5,England,Croatia,Complete,1,0,,13 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+70,2022-11-20 11:21:17.843408+00,Euro Cup 2020,6,Austria,North Macedonia,Complete,3,1,,13 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+71,2022-11-20 11:21:17.843408+00,Euro Cup 2020,7,Netherlands,Ukraine,Complete,3,2,,13 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+72,2022-11-20 11:21:17.843408+00,Euro Cup 2020,8,Scotland,Czech Republic,Complete,0,2,,14 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+73,2022-11-20 11:21:17.843408+00,Euro Cup 2020,9,Poland,Slovakia,Complete,1,2,,14 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+74,2022-11-20 11:21:17.843408+00,Euro Cup 2020,10,Spain,Sweden,Complete,0,0,,14 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+75,2022-11-20 11:21:17.843408+00,Euro Cup 2020,11,Hungary,Portugal,Complete,0,3,,15 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+76,2022-11-20 11:21:17.843408+00,Euro Cup 2020,12,France,Germany,Complete,1,0,,15 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+77,2022-11-20 11:21:17.843408+00,Euro Cup 2020,13,Finland,Russia,Complete,0,1,,16 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+78,2022-11-20 11:21:17.843408+00,Euro Cup 2020,14,Turkey,Wales,Complete,0,2,,16 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+79,2022-11-20 11:21:17.843408+00,Euro Cup 2020,15,Italy,Switzerland,Complete,3,0,,16 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+80,2022-11-20 11:21:17.843408+00,Euro Cup 2020,16,Ukraine,North Macedonia,Complete,2,1,,17 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+81,2022-11-20 11:21:17.843408+00,Euro Cup 2020,17,Denmark,Belgium,Complete,1,2,,17 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+82,2022-11-20 11:21:17.843408+00,Euro Cup 2020,18,Netherlands,Austria,Complete,2,0,,17 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+83,2022-11-20 11:21:17.843408+00,Euro Cup 2020,19,Sweden,Slovakia,Complete,1,0,,18 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+84,2022-11-20 11:21:17.843408+00,Euro Cup 2020,20,Croatia,Czech Republic,Complete,1,1,,18 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+85,2022-11-20 11:21:17.843408+00,Euro Cup 2020,21,England,Scotland,Complete,0,0,,18 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+86,2022-11-20 11:21:17.843408+00,Euro Cup 2020,22,Hungary,France,Complete,1,1,,19 Jun 2021 - 15:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+87,2022-11-20 11:21:17.843408+00,Euro Cup 2020,23,Portugal,Germany,Complete,2,4,,19 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+88,2022-11-20 11:21:17.843408+00,Euro Cup 2020,24,Spain,Poland,Complete,1,1,,19 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+89,2022-11-20 11:21:17.843408+00,Euro Cup 2020,25,Italy,Wales,Complete,1,0,,20 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+90,2022-11-20 11:21:17.843408+00,Euro Cup 2020,26,Switzerland,Turkey,Complete,3,1,,20 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+91,2022-11-20 11:21:17.843408+00,Euro Cup 2020,27,Ukraine,Austria,Complete,0,1,,21 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+92,2022-11-20 11:21:17.843408+00,Euro Cup 2020,28,North Macedonia,Netherlands,Complete,0,3,,21 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+93,2022-11-20 11:21:17.843408+00,Euro Cup 2020,29,Finland,Belgium,Complete,0,2,,21 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+94,2022-11-20 11:21:17.843408+00,Euro Cup 2020,30,Russia,Denmark,Complete,1,4,,21 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+95,2022-11-20 11:21:17.843408+00,Euro Cup 2020,31,Czech Republic,England,Complete,0,1,,22 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+96,2022-11-20 11:21:17.843408+00,Euro Cup 2020,32,Croatia,Scotland,Complete,3,1,,22 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+97,2022-11-20 11:21:17.843408+00,Euro Cup 2020,33,Sweden,Poland,Complete,3,2,,23 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+98,2022-11-20 11:21:17.843408+00,Euro Cup 2020,34,Slovakia,Spain,Complete,0,5,,23 Jun 2021 - 18:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+99,2022-11-20 11:21:17.843408+00,Euro Cup 2020,35,Germany,Hungary,Complete,2,2,,23 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
+100,2022-11-20 11:21:17.843408+00,Euro Cup 2020,36,Portugal,France,Complete,2,2,,23 Jun 2021 - 21:00,bfca5679-f23c-4a92-b297-7a8ac49860f5
