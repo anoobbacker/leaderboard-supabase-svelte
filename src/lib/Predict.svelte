@@ -3,6 +3,7 @@
     import { supabase } from '../supabaseClient'
     import type { AuthSession } from '@supabase/supabase-js'
     import { storeTournament, storeLoggedUID } from "../store";
+    import {team2LetterAcronym} from "../config";
     import Sorry from './Sorry.svelte';
     import Loading from './Loading.svelte';
   
@@ -73,7 +74,7 @@
             last_resultb: result.resultb,
           }
         })
-        console.log("Output: ", tournament, uuid, response);
+        //console.log("Output: ", tournament, uuid, response);
       }).catch(console.log)      
     }
 
@@ -172,7 +173,7 @@
             //hence setting in the main variable
             response.changePredict[matchnumber].submit = true;
       }
-      console.log("Console:", matchnumber, response.changePredict[matchnumber]);
+      //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
     }
   </script>
   
@@ -180,14 +181,12 @@
   {#if response.processed && (response.resultData.length > 0) && (response.predictData?.length > 0) }
     <h1 class="display-6 fw-bold">Predictions</h1>
     <p class="text-muted pt-3">Enter your predictions for upcoming matches (limited to a maximum of 10 matches.)</p>
-    <table class="table">
+    <table class="table table-condensed">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Team A</th>
-          <th scope="col">Team B</th>
-          <th scope="col">Predict A</th>
-          <th scope="col">Predict B</th>
+          <th scope="col">Match</th>
+          <th scope="col">Predict</th>
           <th scope="col">...</th>
         </tr>
       </thead>
@@ -196,8 +195,8 @@
         {#if index < 10}
         <tr>
           <th scope="row">{result.matchnumber}</th>
-          <td>{result.teama}</td>
-          <td>{result.teamb}</td>
+          <td><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} width='18px' alt="{result.teama}"/> {result.teama}
+            <br/><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} width='18px' alt="{result.teamb}"/> {result.teamb}</td>
           <td>
           {#if result.status == 'Complete'}
             {#if (response.predictData[result.matchnumber-1].resulta == null) || (response.predictData[result.matchnumber-1].resulta < 0)}
@@ -207,28 +206,26 @@
             {/if}
           {:else}
             <input 
-              id="teama{result.matchnumber}" type="number" class="form-control" 
+              id="teama{result.matchnumber}" type="number" class="form-control mb-1" 
               placeholder="{result.teama}" aria-label="Team A Precition" aria-describedby="basic-addon1"
               bind:value={response.changePredict[result.matchnumber].resulta} min=0 max=20
               on:change={() => scoreChanged(result.matchnumber)}
             >
           {/if}
-          </td>
-          <td>
-            {#if result.status == 'Complete'}
-            {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
-            ➖
-            {:else}
-            {response.predictData[result.matchnumber-1].resultb}
-            {/if}
-            {:else}
-              <input 
-                id="teamb{result.matchnumber}" type="number" class="form-control" 
-                placeholder="{result.teamb}" aria-label="Team A Precition" aria-describedby="basic-addon1" 
-                bind:value={response.changePredict[result.matchnumber].resultb} min=0 max=20
-                on:change={() => scoreChanged(result.matchnumber)}
-              >
-            {/if}
+          {#if result.status == 'Complete'}
+          {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
+          ➖
+          {:else}
+          {response.predictData[result.matchnumber-1].resultb}
+          {/if}
+          {:else}
+            <input 
+              id="teamb{result.matchnumber}" type="number" class="form-control" 
+              placeholder="{result.teamb}" aria-label="Team A Precition" aria-describedby="basic-addon1" 
+              bind:value={response.changePredict[result.matchnumber].resultb} min=0 max=20
+              on:change={() => scoreChanged(result.matchnumber)}
+            >
+          {/if}
           </td>
           <td>
             {#if result.status != 'Complete'}

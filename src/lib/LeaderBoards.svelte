@@ -161,7 +161,7 @@
     }
 
     onMount(() => {
-      loadDataFromSupabase();
+      //loadDataFromSupabase();
     })
 
     onDestroy(() => {
@@ -182,33 +182,33 @@
     });
 </script>
 
-{#if response.processed && (sortedLeaderNames.length > 0)}
+<aside class="text-center mb-5">
+  <div class="container">
+    <div class="h2 fs-3 text-black mb-4">Click the button to view other tournaments!</div>
+    <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-3">
+      <div id="simple-list-example" class="dropdown simple-list-example-scrollspy">
+          <a 
+            class="btn btn-secondary dropdown-toggle" href="#leaderboards" 
+            tabIndex="0" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            View Leaderboard
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+3
+              <span class="visually-hidden">3 tournaments</span></span>
+          </a>
+          <ul class="dropdown-menu">
+            {#each tournaments as tName}
+            <li><a class="dropdown-item" href="#leaderboards" on:click={switchTournament}>{tName.tournament}</a></li>
+            {/each}
+          </ul>
+      </div>
+      <button type="button" class="btn btn-primary" on:click={() => storeCurrentPage.set('Predict')}>Submit prediction</button>
+    </div>
+  </div>
+</aside>
+
+{#if response.processed && (sortedLeaderNames.length > 0) && (Object.keys(participants).length > 0)}
 <!-- App features section-->
 <section id="leaderboards" class="mt-0">
-  <aside class="text-center mb-2">
-    <div class="container">
-      <div class="h2 fs-3 text-black mb-4">Click the button to view other tournaments!</div>
-      <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-3">
-        <div id="simple-list-example" class="dropdown simple-list-example-scrollspy">
-            <a 
-              class="btn btn-secondary dropdown-toggle" href="#leaderboards" 
-              tabIndex="0" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              View Leaderboard
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-3
-                <span class="visually-hidden">3 tournaments</span></span>
-            </a>
-            <ul class="dropdown-menu">
-              {#each tournaments as tName}
-              <li><a class="dropdown-item" href="#leaderboards" on:click={switchTournament}>{tName.tournament}</a></li>
-              {/each}
-            </ul>
-        </div>
-        <button type="button" class="btn btn-primary" on:click={() => storeCurrentPage.set('Predict')}>Submit prediction</button>
-      </div>
-    </div>
-  </aside>
-
   <div data-bs-spy="scroll" data-bs-target="#simple-list-example" data-bs-offset="0" 
       data-bs-smooth-scroll="true" class="scrollspy-example" tabIndex="0">
     <div class="section-heading text-center pt-3 pb-3">
