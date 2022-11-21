@@ -3,6 +3,13 @@ This is a friendly fun project created after going through the pain of building 
 
 This can be used as the dashboard for a fun social leaderboard between friends.
 
+# Screenshot
+![Leaderboard](https://user-images.githubusercontent.com/13219906/203118207-366788de-79fe-4526-a6cd-e26fe5404bea.png)
+
+https://user-images.githubusercontent.com/13219906/203117361-3c3d61ad-739e-452e-aeaa-dae996f223bb.mp4
+
+
+
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
