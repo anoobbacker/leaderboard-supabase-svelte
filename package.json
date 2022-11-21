@@ -2,12 +2,14 @@
   "name": "leaderboard-supabase-svelte",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://anoobbacker.github.io/betwc",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
+    "predeploy": "npm run build",
     "deploy": "npx gh-pages -d dist"
   },
   "devDependencies": {
