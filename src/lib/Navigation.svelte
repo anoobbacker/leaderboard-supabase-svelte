@@ -65,8 +65,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
-                <li class="nav-item"><a class="nav-link me-lg-3" href="https://github.com/anoobbacker/leaderboard-react" target="_blank" rel="noreferrer"><i class="bi bi-github"></i> Contribute</a></li>
-                <li class="nav-item"><a class="nav-link me-lg-3" href="https://github.com/anoobbacker/leaderboard-react/issues/new/choose" target="_blank" rel="noreferrer"><i class="bi bi-bug"></i> Submit issues</a></li>
+                <li class="nav-item"><a class="nav-link me-lg-3" href="https://github.com/anoobbacker/leaderboard-supabase-svelte" target="_blank" rel="noreferrer"><i class="bi bi-github"></i> Contribute</a></li>
+                <li class="nav-item"><a class="nav-link me-lg-3" href="https://github.com/anoobbacker/leaderboard-supabase-svelte/issues/new/choose" target="_blank" rel="noreferrer"><i class="bi bi-bug"></i> Submit issues</a></li>
             </ul>
         </div>
     </div>

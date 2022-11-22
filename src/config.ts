@@ -291,7 +291,7 @@ export var team2LetterAcronym = {
   'Austria': 'at',
   'Belgium': 'be',
   'Brazil': 'br',
-  'Cameroon': 'cr',
+  'Cameroon': 'cm',
   'Canada': 'ca',
   'Colombia': 'co',
   'Costa Rica': 'cr',
