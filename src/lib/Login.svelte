@@ -40,7 +40,7 @@
                   placeholder="Enter your email"
                   bind:value="{email}"
               />
-              <button type="submit" class="btn btn-primary btn-lg px-4 gap-3" 
+              <button type="submit" class="btn btn-primary px-4 gap-3" 
                   aria-live="polite" disabled="{loading}">
                   <span>{loading ? 'Loading' : 'Send magic link'}</span>
               </button>

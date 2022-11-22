@@ -5,7 +5,7 @@
       storeCountLost, storeMatchScorePlusWin, storeMatchWin, storeMatchLoss,
       storeTotalPredicts, storeAllGames, storeUpcomingGames, storeSortedLeaderNames,
     } from "../store";
-    import {GameTournaments, teamNameAcronymn, team2LetterAcronym, team3To2LetterAcronym} from "../config";
+    import {GameTournaments, team3To2LetterAcronym} from "../config";
     import {processData} from "../processPoints";
     import Sorry from './Sorry.svelte';
 
@@ -184,7 +184,7 @@
 
 <aside class="text-center mb-5">
   <div class="container">
-    <div class="h2 fs-3 text-black mb-4">Click the button to view other tournaments!</div>
+    <div class="h2 fs-3 text-black mb-4">Click the buttons below!</div>
     <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-3">
       <div id="simple-list-example" class="dropdown simple-list-example-scrollspy">
           <a 
@@ -201,7 +201,7 @@
             {/each}
           </ul>
       </div>
-      <button type="button" class="btn btn-primary" on:click={() => storeCurrentPage.set('Predict')}>Submit prediction</button>
+      <a type="button" class="btn btn-primary" href="#app" on:click={() => storeCurrentPage.set('Predict')}>Submit prediction</a>
     </div>
   </div>
 </aside>

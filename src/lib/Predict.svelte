@@ -3,7 +3,7 @@
     import { supabase } from '../supabaseClient'
     import type { AuthSession } from '@supabase/supabase-js'
     import { storeTournament, storeLoggedUID } from "../store";
-    import {team2LetterAcronym} from "../config";
+    import {GameTournaments, team2LetterAcronym, teamNameAcronymn} from "../config";
     import Sorry from './Sorry.svelte';
     import Loading from './Loading.svelte';
   
@@ -14,7 +14,8 @@
       resultData: null,
       predictData: null,
       processed: false,
-      changePredict: {}
+      changePredict: {},
+      matchDatetime: {},
     };
 
     let uuid;
@@ -33,11 +34,11 @@
           {
               const { data, error, status } = await supabase
                 .from('results')
-                .select('matchnumber, teama, teamb, status')
+                .select('matchnumber, teama, teamb, status, matchdate')
                 .eq('tournament', tournament.name)
-                .neq('teama', 'TBD')
-                .neq('teamb', 'TBD')
+                .neq('status','Complete')
                 .order('matchnumber', {ascending: true})
+                .limit(10)
                   
               if (error && status !== 406) throw error
               response.resultData = data;
@@ -61,18 +62,27 @@
       }
       const p1 = getResults();
       p1.then(() => {
-        response.processed = true;
-        response.predictData.forEach((result, index) => {
+        response.resultData.forEach((result) => {
+          let datetimeString: Date = new Date(result.matchdate.replace("-","").trim() + " GMT+0530")
+          let matchnumber: number = result.matchnumber;
+          response.matchDatetime[matchnumber] = datetimeString; //used to disable the button
+          //console.log("Date", matchnumber, datetimeString)
+        });
+
+        response.predictData.forEach((result) => {
           let matchnumber: number = result.matchnumber;
           let resultTeamA: any = (result.resulta == null) ? '' : result.resulta;
           let resultTeamB: any = (result.resultb == null) ? '' : result.resultb;
           response.changePredict[matchnumber] = {
-            resulta: resultTeamA, 
+            resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
             resultb: resultTeamB, 
-            submit: false,
-            last_resulta: result.resulta,
+            last_resulta: result.resulta, //value retrieved from DB
             last_resultb: result.resultb,
+            submit: false, //capture if value changed from last value, used for enabling button. 
+            submitted: false, //capture if the changed value got saved
+            haserror: false, //to indicated if the changed prediction has errors            
           }
+          response.processed = true;
         })
         //console.log("Output: ", tournament, uuid, response);
       }).catch(console.log)      
@@ -87,7 +97,10 @@
         session = _session
       })
 
-      loadDataFromSupabase();
+      //defaulting it to world cup 2022 as there are no multiple match prediction supported now.
+      //TODO: This should be configurable or can be chosen by participants in case multiple predictions are happening
+      storeTournament.set(GameTournaments.WorldCup2022);
+      loadDataFromSupabase();      
     });
 
     onDestroy(() => {
@@ -118,7 +131,6 @@
           try {
             responseAddPredictData.loading = true;
             responseAddPredictData.processed = false;
-            showToast();
             const { user } = session
     
             const row = {
@@ -138,12 +150,15 @@
             if (error && status !== 406) throw error
             responseAddPredictData.lastOperationStatus = 'Success';
             responseAddPredictData.statusMsg = 'Added the entry!'
+            response.changePredict[matchnumber].submitted = true;
+            showToast();
           } catch (error) {
             console.error("Error:", error);
             if (error instanceof Error) {
               responseAddPredictData.statusMsg = error.message;
             }
             responseAddPredictData.lastOperationStatus = 'Failed';
+            response.changePredict[matchnumber].submitted = false;
           } finally {
             responseAddPredictData.loading = false
           }
@@ -151,6 +166,7 @@
 
     function saveScore(matchnumber) {
       //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
+      showToast();
       const p1 = addPrediction(matchnumber);
       p1.then(() => {
         responseAddPredictData.processed = true;
@@ -160,18 +176,33 @@
 
     function scoreChanged(matchnumber) {
       let predict = response.changePredict[matchnumber]
+      //console.log("Console:", matchnumber, predict);
+      
+      //check if it is old value if so no need to save
+      if ( (predict.resulta == predict.last_resulta) 
+          && (predict.resultb == predict.last_resultb) ) {
+            //setting in the local varilable predict wasn't working.
+            //hence setting in the main variable
+            response.changePredict[matchnumber].haserror = false;
+            response.changePredict[matchnumber].submit = false;
+            response.changePredict[matchnumber].submitted = true;
+      }
+
       //if both are not numbers don't turn on save button.
       if ( isNaN(predict.resulta) || isNaN(predict.resultb) 
             ||  (predict.resultb === '') 
-            || (predict.resulta === '')) {
-              return
-      }
-      //if both are not numbers and was edited turn on save button
-      if ( (predict.resulta != predict.last_resulta) 
+            || (predict.resulta === '')
+            || (predict.resulta === null)
+            || (predict.resultb === null)) {
+            response.changePredict[matchnumber].haserror = true;
+      } else if ( (predict.resulta != predict.last_resulta) 
           || (predict.resultb != predict.last_resultb) ) {
+          //if both are not numbers and was edited turn on save button      
             //setting in the local varilable predict wasn't working.
             //hence setting in the main variable
+            response.changePredict[matchnumber].haserror = false;
             response.changePredict[matchnumber].submit = true;
+            response.changePredict[matchnumber].submitted = false;
       }
       //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
     }
@@ -195,10 +226,10 @@
         {#if index < 10}
         <tr>
           <th scope="row">{result.matchnumber}</th>
-          <td><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} width='18px' alt="{result.teama}"/> {result.teama}
-            <br/><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} width='18px' alt="{result.teamb}"/> {result.teamb}</td>
-          <td>
-          {#if result.status == 'Complete'}
+          <td><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} width='18px' alt="{result.teama}"/> {teamNameAcronymn[result.teama]}
+            <br/><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} width='18px' alt="{result.teamb}"/> {teamNameAcronymn[result.teamb]}</td>
+          <td class="col-4">
+          {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber])}
             {#if (response.predictData[result.matchnumber-1].resulta == null) || (response.predictData[result.matchnumber-1].resulta < 0)}
             ➖
             {:else}
@@ -206,33 +237,47 @@
             {/if}
           {:else}
             <input 
-              id="teama{result.matchnumber}" type="number" class="form-control mb-1" 
+              id="teama{result.matchnumber}" type="number" 
+              class="form-control mb-1 {response.changePredict[result.matchnumber].haserror ? 'is-invalid' : response.changePredict[result.matchnumber].submit && !response.changePredict[result.matchnumber].submitted ? 'is-valid': ''}" 
               placeholder="{result.teama}" aria-label="Team A Precition" aria-describedby="basic-addon1"
               bind:value={response.changePredict[result.matchnumber].resulta} min=0 max=20
               on:change={() => scoreChanged(result.matchnumber)}
+              on:keyup={() => scoreChanged(result.matchnumber)}
             >
           {/if}
-          {#if result.status == 'Complete'}
+          {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber]) }
           {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
           ➖
           {:else}
-          {response.predictData[result.matchnumber-1].resultb}
+          <br/>{response.predictData[result.matchnumber-1].resultb}
           {/if}
           {:else}
             <input 
-              id="teamb{result.matchnumber}" type="number" class="form-control" 
-              placeholder="{result.teamb}" aria-label="Team A Precition" aria-describedby="basic-addon1" 
+              id="teamb{result.matchnumber}" type="number" 
+              class="form-control {response.changePredict[result.matchnumber].submit && !response.changePredict[result.matchnumber].submitted ? 'is-valid': ''}"
+              placeholder="{result.teamb}" aria-label="Team A Precition" aria-describedby="basic-addon2" 
               bind:value={response.changePredict[result.matchnumber].resultb} min=0 max=20
               on:change={() => scoreChanged(result.matchnumber)}
+              on:keyup={() => scoreChanged(result.matchnumber)}
             >
+            <div class="valid-feedback">
+              Save score!
+            </div>
+            <div class="invalid-feedback">
+              Invalid score!
+            </div>
           {/if}
           </td>
-          <td>
-            {#if result.status != 'Complete'}
-            <button id="{result.matchnumber}" type="button" class="btn btn-dark" 
+          <td class="align-middle">
+            {#if (result.status != 'Complete') && (Date.now() <= response.matchDatetime[result.matchnumber])}
+            <button id="{result.matchnumber}" type="button" class="btn {response.changePredict[result.matchnumber].submit ? 'btn-primary' : 'btn-outline-dark'}" 
             on:click={() => saveScore(result.matchnumber)} disabled="{response.changePredict[result.matchnumber].submit === false}">Save</button>
+            {:else if (result.status != 'Complete') }
+            <!-- don't show save button, instead show that match is on-going -->
+            ⏱
             {:else}
-            <button id="{result.matchnumber}" type="button" class="btn btn-dark" disabled>Save</button>
+            <!-- don't show save button, instead show that match was completed -->
+            ✔️
             {/if}             
           </td>
         </tr>
