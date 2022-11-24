@@ -142,6 +142,7 @@
                 .select('tournament, matchnumber, participant, resulta, resultb')
                 .eq('tournament', tournament.name)
                 .order('matchnumber', {ascending: true})
+                .order('participant', {ascending: true})
                   
               if (error && status !== 406) throw error
               response.predictData = data;

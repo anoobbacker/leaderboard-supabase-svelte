@@ -2,10 +2,11 @@
     import { onMount, onDestroy } from 'svelte'
     import { supabase } from '../supabaseClient'
     import type { AuthSession } from '@supabase/supabase-js'
-    import { storeTournament, storeLoggedUID } from "../store";
+    import { storeTournament, storeLoggedUID, addToast } from "../store";
     import {GameTournaments, team2LetterAcronym, teamNameAcronymn} from "../config";
     import Sorry from './Sorry.svelte';
     import Loading from './Loading.svelte';
+    import Toasts from './Toasts.svelte';
   
     export let session: AuthSession
     
@@ -71,16 +72,25 @@
 
         response.predictData.forEach((result) => {
           let matchnumber: number = result.matchnumber;
-          let resultTeamA: any = (result.resulta == null) ? '' : result.resulta;
-          let resultTeamB: any = (result.resultb == null) ? '' : result.resultb;
+          let resultTeamA: number = result.resulta;
+          let resultTeamB: number = result.resultb;
           response.changePredict[matchnumber] = {
             resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
             resultb: resultTeamB, 
-            last_resulta: result.resulta, //value retrieved from DB
-            last_resultb: result.resultb,
+            last_resulta: resultTeamA, //value retrieved from DB
+            last_resultb: resultTeamB,
             submit: false, //capture if value changed from last value, used for enabling button. 
             submitted: false, //capture if the changed value got saved
-            haserror: false, //to indicated if the changed prediction has errors            
+            avalidation: 'default', //to indicated if the changed prediction has errors
+            bvalidation: 'default',
+            response: {
+              loading: false,
+              statusMsg: '',
+              status: -1,
+              error: null,
+              lastOperationStatus: '',
+              processed: false,
+            },
           }
           response.processed = true;
         })
@@ -107,30 +117,11 @@
       usub1();
       usub2();
     });
-
     
-    let responseAddPredictData = {
-      loading: false,
-      statusMsg: '',
-      status: -1,
-      error: null,
-      lastOperationStatus: '',
-      processed: false,
-    };
-    
-    function showToast()
-    {
-      const toastLiveExample = document.getElementById('liveToast')
-      if (toastLiveExample) {
-        const toast = new bootstrap.Toast(toastLiveExample)
-        toast.show()
-      }
-    }
-
     const addPrediction = async (matchnumber) => {
           try {
-            responseAddPredictData.loading = true;
-            responseAddPredictData.processed = false;
+            response.changePredict[matchnumber].response.loading = true;
+            response.changePredict[matchnumber].response.processed = false;
             const { user } = session
     
             const row = {
@@ -144,170 +135,308 @@
               .update(row)
               .eq('matchnumber', matchnumber)
             
-            responseAddPredictData.status = status;
-            responseAddPredictData.error = error;
+            response.changePredict[matchnumber].response.status = status;
+            response.changePredict[matchnumber].response.error = error;
       
             if (error && status !== 406) throw error
-            responseAddPredictData.lastOperationStatus = 'Success';
-            responseAddPredictData.statusMsg = 'Added the entry!'
             response.changePredict[matchnumber].submitted = true;
-            showToast();
           } catch (error) {
             console.error("Error:", error);
             if (error instanceof Error) {
-              responseAddPredictData.statusMsg = error.message;
+              response.changePredict[matchnumber].response.statusMsg = error.message;
             }
-            responseAddPredictData.lastOperationStatus = 'Failed';
+            response.changePredict[matchnumber].response.lastOperationStatus = 'failed';
             response.changePredict[matchnumber].submitted = false;
           } finally {
-            responseAddPredictData.loading = false
+            response.changePredict[matchnumber].response.loading = false
           }
     }
 
     function saveScore(matchnumber) {
       //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
-      showToast();
+      //show toast before triggerring
+      response.changePredict[matchnumber].response.lastOperationStatus = 'info';
+      response.changePredict[matchnumber].response.statusMsg = 'Adding the entry!'
+      addToast({
+        message: response.changePredict[matchnumber].response.statusMsg, 
+        type: response.changePredict[matchnumber].response.lastOperationStatus, 
+        dismissible: true, 
+        timeout: 1000});
+
+      //add prediction
       const p1 = addPrediction(matchnumber);
+
+      //wait for the prediction to get added.
       p1.then(() => {
-        responseAddPredictData.processed = true;
+        response.changePredict[matchnumber].response.processed = true;
+        response.changePredict[matchnumber].submit = false;
+        response.changePredict[matchnumber].response.lastOperationStatus = "success";
+        response.changePredict[matchnumber].response.statusMsg = 'Successfully added prediction!'
+        addToast({
+          message: response.changePredict[matchnumber].response.statusMsg, 
+          type: response.changePredict[matchnumber].response.lastOperationStatus, 
+          dismissible: true, 
+          timeout: 3000});
         //console.log("Add prediction: ", responseAddPredictData, response)
-      }).catch(console.log)
+      }).catch((error) => {
+        response.changePredict[matchnumber].response.processed = true;
+        response.changePredict[matchnumber].submit = false;
+        response.changePredict[matchnumber].response.lastOperationStatus = "error";
+        response.changePredict[matchnumber].response.statusMsg = 'Failed to add prediction!'
+        addToast({
+          message: response.changePredict[matchnumber].response.statusMsg, 
+          type: response.changePredict[matchnumber].response.lastOperationStatus, 
+          dismissible: true, 
+          timeout: 3000});
+        //console.log("Save score:", response.changePredict)
+      })
+      //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
     }
 
-    function scoreChanged(matchnumber) {
+    function increaseTeamAScore(matchnumber: number)
+    {
+      let resulta = response.changePredict[matchnumber]?.resulta;
+      if ((resulta === "") || (resulta === null) ) {
+        response.changePredict[matchnumber].resulta = 0;
+      }      
+      response.changePredict[matchnumber].resulta++;
+      scoreChanged(matchnumber);
+    }
+
+    function increaseTeamBScore(matchnumber: number)
+    {
+      let resultb = response.changePredict[matchnumber]?.resultb;
+      if ((resultb === "") || (resultb === null) ) {
+        response.changePredict[matchnumber].resultb = 0;
+      }
+      response.changePredict[matchnumber].resultb++;
+      scoreChanged(matchnumber);
+    }
+
+    function decreaseTeamAScore(matchnumber: number) {
+      let resulta = response.changePredict[matchnumber]?.resulta;
+      if ((resulta === "") || (resulta === null) ) {
+        response.changePredict[matchnumber].resulta = 0;
+      } else if (response.changePredict[matchnumber].resulta <= 0 ) {
+        //skip as it will go negative.
+      } else {
+        response.changePredict[matchnumber].resulta--;
+      }
+      scoreChanged(matchnumber);
+    }
+
+    function decreaseTeamBScore(matchnumber: number) {
+      let resultb = response.changePredict[matchnumber]?.resultb;
+      if ((resultb === "") || (resultb === null) ) {
+        response.changePredict[matchnumber].resultb = 0;
+      } else if (response.changePredict[matchnumber].resultb <= 0 ) {
+        //skip as it will go negative.
+      } else {
+        response.changePredict[matchnumber].resultb--;
+      }
+      scoreChanged(matchnumber);
+    }
+
+    function scoreChanged(matchnumber: number) {
       let predict = response.changePredict[matchnumber]
       //console.log("Console:", matchnumber, predict);
       
-      //check if it is old value if so no need to save
-      if ( (predict.resulta == predict.last_resulta) 
-          && (predict.resultb == predict.last_resultb) ) {
-            //setting in the local varilable predict wasn't working.
-            //hence setting in the main variable
-            response.changePredict[matchnumber].haserror = false;
-            response.changePredict[matchnumber].submit = false;
-            response.changePredict[matchnumber].submitted = true;
+      //check if resulta has error.
+      if ( predict.resulta === predict.last_resulta ) {
+        //not an error if result has old value. in this case both can be null.
+        response.changePredict[matchnumber].avalidation = 'default';
+      } else if ( (predict.resulta === null) 
+            || isNaN(predict.resulta) 
+            || (predict.resulta === '')
+          ) {
+          response.changePredict[matchnumber].avalidation = 'error';
+      } else {
+        response.changePredict[matchnumber].avalidation = 'ok';
       }
 
-      //if both are not numbers don't turn on save button.
-      if ( isNaN(predict.resulta) || isNaN(predict.resultb) 
-            ||  (predict.resultb === '') 
-            || (predict.resulta === '')
-            || (predict.resulta === null)
-            || (predict.resultb === null)) {
-            response.changePredict[matchnumber].haserror = true;
-      } else if ( (predict.resulta != predict.last_resulta) 
-          || (predict.resultb != predict.last_resultb) ) {
-          //if both are not numbers and was edited turn on save button      
-            //setting in the local varilable predict wasn't working.
-            //hence setting in the main variable
-            response.changePredict[matchnumber].haserror = false;
-            response.changePredict[matchnumber].submit = true;
-            response.changePredict[matchnumber].submitted = false;
+      if ( predict.resultb === predict.last_resultb ) {
+        //not an error if result has old value. in this case both can be null.
+        response.changePredict[matchnumber].bvalidation = 'default';
+      } else if ((predict.resultb === null) 
+          || isNaN(predict.resultb) 
+          || (predict.resultb === '')
+        ) {
+        response.changePredict[matchnumber].bvalidation = 'error';
+      } else {
+        response.changePredict[matchnumber].bvalidation = 'ok';
       }
-      //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
+
+      //return if any one of the field has error.
+      if ( ('error' === response.changePredict[matchnumber].bhaserror)
+        || ('error' === response.changePredict[matchnumber].ahaserror) ) {
+        console.log("scoreChanged error:", matchnumber, response.changePredict[matchnumber]);
+        response.changePredict[matchnumber].submit = false;
+        response.changePredict[matchnumber].submitted = true;
+        return;
+      }      
+
+      //check if user cleared the input field and if not set the values.
+      if ((predict.resulta !== "") && (predict.resulta !== null) 
+          && (predict.resultb !== "") && (predict.resultb !== null)) {
+        //if both are numbers and was edited turn on save button
+        //setting in the local varilable predict wasn't working.
+        //hence setting in the main variable
+        response.changePredict[matchnumber].submit = true;
+        response.changePredict[matchnumber].submitted = false;
+      } else {
+        response.changePredict[matchnumber].submit = false;
+        response.changePredict[matchnumber].submitted = true;
+      }
+      //console.log("scoreChanged success:", matchnumber, response.changePredict[matchnumber]);
     }
   </script>
   
-  <section id="predictions" class="container-fluid">
-  {#if response.processed && (response.resultData.length > 0) && (response.predictData?.length > 0) }
-    <h1 class="display-6 fw-bold">Predictions</h1>
-    <p class="text-muted pt-3">Enter your predictions for upcoming matches (limited to a maximum of 10 matches.)</p>
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Match</th>
-          <th scope="col">Predict</th>
-          <th scope="col">...</th>
-        </tr>
-      </thead>
-      <tbody>
+<section id="predictions">
+  <div class="container pt-2">
+    <h2>Predictions</h2>
+    <p class="text-muted">Enter your predictions for upcoming matches (limited to a maximum of 10 matches.)</p>
+    {#if response.processed && (response.resultData.length > 0) && (response.predictData?.length > 0) }
+    <div class="container-fluid">
         {#each response.resultData as result, index}
-        {#if index < 10}
-        <tr>
-          <th scope="row">{result.matchnumber}</th>
-          <td><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} width='18px' alt="{result.teama}"/> {teamNameAcronymn[result.teama]}
-            <br/><img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} width='18px' alt="{result.teamb}"/> {teamNameAcronymn[result.teamb]}</td>
-          <td class="col-4">
-          {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber])}
-            {#if (response.predictData[result.matchnumber-1].resulta == null) || (response.predictData[result.matchnumber-1].resulta < 0)}
-            ➖
+        <score-predictor class="align-middle gap-2 mb-4">
+          <div class="team-wrapper align-middle">
+            <img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} 
+            width='25em' 
+            alt="{result.teama}"/> 
+            <span>{teamNameAcronymn[result.teama]}</span>            
+          </div>
+          <div class="score-predictor-controls align-middle">
+            {#if (result.status == 'Complete') 
+                  || (Date.now() > response.matchDatetime[result.matchnumber])}
+              {#if (response.predictData[result.matchnumber-1].resulta == null) 
+                   || (response.predictData[result.matchnumber-1].resulta < 0)}
+              ➖
+              {:else}
+              <div class="fw-bold fs-2 text-center">{response.predictData[result.matchnumber-1].resulta}</div>              
+              {/if}
             {:else}
-            {response.predictData[result.matchnumber-1].resulta}
-            {/if}
-          {:else}
+            <button class="score-predictor-number-button-up btn-light"
+              on:click={() => increaseTeamAScore(result.matchnumber)} >
+              <i class="bi bi-chevron-up text-danger"></i>
+            </button>
             <input 
               id="teama{result.matchnumber}" type="number" 
-              class="form-control mb-1 {response.changePredict[result.matchnumber].haserror ? 'is-invalid' : response.changePredict[result.matchnumber].submit && !response.changePredict[result.matchnumber].submitted ? 'is-valid': ''}" 
-              placeholder="{result.teama}" aria-label="Team A Precition" aria-describedby="basic-addon1"
-              bind:value={response.changePredict[result.matchnumber].resulta} min=0 max=20
+              class="form-control fw-bold fs-2 text-center" 
+              placeholder="-" aria-label="Team A Precition" aria-describedby="basic-addon1"
+              min=0 max=20
+              bind:value={response.changePredict[result.matchnumber].resulta} 
               on:change={() => scoreChanged(result.matchnumber)}
               on:keyup={() => scoreChanged(result.matchnumber)}
             >
-          {/if}
-          {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber]) }
-          {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
-          ➖
-          {:else}
-          <br/>{response.predictData[result.matchnumber-1].resultb}
-          {/if}
-          {:else}
-            <input 
-              id="teamb{result.matchnumber}" type="number" 
-              class="form-control {response.changePredict[result.matchnumber].submit && !response.changePredict[result.matchnumber].submitted ? 'is-valid': ''}"
-              placeholder="{result.teamb}" aria-label="Team A Precition" aria-describedby="basic-addon2" 
-              bind:value={response.changePredict[result.matchnumber].resultb} min=0 max=20
-              on:change={() => scoreChanged(result.matchnumber)}
-              on:keyup={() => scoreChanged(result.matchnumber)}
-            >
-            <div class="valid-feedback">
-              Save score!
-            </div>
-            <div class="invalid-feedback">
-              Invalid score!
-            </div>
-          {/if}
-          </td>
-          <td class="align-middle">
+            <button class="score-predictor-number-button-down btn-light"
+              on:click={() => decreaseTeamAScore(result.matchnumber)}>
+              <i class="bi bi-chevron-down text-danger"></i>
+            </button>
+            {/if}
+          </div>
+          <div class="fw-bold text-center align-middle">-</div>
+          <div class="score-predictor-controls align-middle">
+            {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber]) }
+              {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
+              ➖
+              {:else}
+              <div class="fw-bold fs-2 text-center mb-1">{response.predictData[result.matchnumber-1].resultb}</div>
+              {/if}
+            {:else}
+              <button class="score-predictor-number-button-up btn-light"
+                on:click={() => increaseTeamBScore(result.matchnumber)} >
+                <i class="bi bi-chevron-up text-danger"></i>
+              </button>
+              <input 
+                id="teamb{result.matchnumber}" type="number" 
+                class="form-control fw-bold fs-2 text-center"
+                placeholder="-" aria-label="Team B Precition" aria-describedby="basic-addon2" 
+                min=0 max=20
+                bind:value={response.changePredict[result.matchnumber].resultb} 
+                on:change={() => scoreChanged(result.matchnumber)}
+                on:keyup={() => scoreChanged(result.matchnumber)}
+              >
+              <button class="score-predictor-number-button-down btn-light"
+                on:click={() => decreaseTeamBScore(result.matchnumber)}>
+                <i class="bi bi-chevron-down text-danger"></i>
+              </button>
+            {/if}
+          </div>
+          <div class="team-wrapper">
+            <img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} 
+            width='25em' 
+            alt="{result.teamb}"/>
+            <span>{teamNameAcronymn[result.teamb]}</span>
+          </div>
+          <div class="align-middle text-center">
             {#if (result.status != 'Complete') && (Date.now() <= response.matchDatetime[result.matchnumber])}
-            <button id="{result.matchnumber}" type="button" class="btn {response.changePredict[result.matchnumber].submit ? 'btn-primary' : 'btn-outline-dark'}" 
+            <button id="{result.matchnumber}" type="button" class="btn {response.changePredict[result.matchnumber].submit ? 'btn-primary' : 'btn-outline-light'}" 
             on:click={() => saveScore(result.matchnumber)} disabled="{response.changePredict[result.matchnumber].submit === false}">Save</button>
             {:else if (result.status != 'Complete') }
             <!-- don't show save button, instead show that match is on-going -->
-            ⏱
+            <p class="fs-2 text-center">⏱</p>
             {:else}
             <!-- don't show save button, instead show that match was completed -->
-            ✔️
+            <p class="fs-2 text-center">✔️</p>
             {/if}             
-          </td>
-        </tr>
-        {/if}
+          </div>
+        </score-predictor>
         {/each}
-      </tbody>
-    </table>
+    </div>
     <!-- Toast which shows the success status -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
-      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-          <strong class="me-auto">🏆 Kotas Leaderboard</strong>
-          <small>Few seconds ago</small>
-          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-          {#if (responseAddPredictData.loading === true) }
-          Adding your predictions...
-          {:else if (responseAddPredictData.lastOperationStatus === 'Failed') }
-          {responseAddPredictData.lastOperationStatus}: {responseAddPredictData.statusMsg}
-          {:else if (responseAddPredictData.lastOperationStatus === 'Success') }
-          Successfully added your prediction!
-          {/if}
-        </div>
-      </div>
-    </div>
+      <Toasts />
+    </div>    
   {:else if response.processed == false}
   <Loading />
   {:else if response.predictData?.length == 0}
   <Sorry />
   {/if}
+  </div>
+
 </section>
   
+<style lang="postcss">
+  score-predictor {
+    display: grid;
+    grid-template-columns: minmax(10%, 10%) minmax(20%, 20%) minmax(5%, 5%) minmax(20%, 20%) minmax(10%, 10%) minmax(20%, 30%);
+    gap: 1vw;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+  }
+  .team-wrapper {
+    display: flex;
+    flex-flow: column wrap;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .score-predictor-controls {
+    display: grid;
+    grid-template-columns: minmax(auto, auto);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+  }
+  .score-predictor-number-input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 80px;
+    min-width: 60px;
+    text-align: center;
+  }
+  .score-predictor-number-button-up {
+    border-radius: 8px 8px 0px 0px;
+    border: 1px solid var(--bs-gray);
+  }
+  .score-predictor-number-button-down {
+    border-radius: 0px 0px 8px 8px;
+    border: 1px solid var(--bs-gray);
+  }
+</style>
