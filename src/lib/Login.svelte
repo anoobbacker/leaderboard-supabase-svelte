@@ -42,7 +42,7 @@
               />
               <button type="submit" class="btn btn-primary px-4 gap-3" 
                   aria-live="polite" disabled="{loading}">
-                  <span>{loading ? 'Loading' : 'Send magic link'}</span>
+                  <span>{loading ? 'Sending magic link' : 'Send magic link'}</span>
               </button>
           </form>
           {#if signedUpTried && (emailSubmissionStatus.length > 0)}
