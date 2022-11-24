@@ -129,7 +129,7 @@
             {
               const { data, error, status } = await supabase
                 .from('results')
-                .select('tournament, matchnumber, teama, teamb, status, resulta, resultb')
+                .select('matchnumber, teama, teamb, status, resulta, resultb')
                 .eq('tournament', tournament.name)
                 .order('matchnumber', {ascending: true})
                   
@@ -139,7 +139,7 @@
             {
               const { data, error, status } = await supabase
                 .from('predicts')
-                .select('tournament, matchnumber, participant, resulta, resultb')
+                .select('matchnumber, participant, resulta, resultb')
                 .eq('tournament', tournament.name)
                 .order('matchnumber', {ascending: true})
                 .order('participant', {ascending: true})
