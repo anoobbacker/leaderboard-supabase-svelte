@@ -31,6 +31,7 @@
               const { data, error, status } = await supabase
                 .from('tournaments')
                 .select('tournament')
+                .neq('tournament', 'Euro Cup 2020') //TODO: exclude untill the prediction table is fixed
                   
               if (error && status !== 406) throw error
               response.tournamentsData = data;

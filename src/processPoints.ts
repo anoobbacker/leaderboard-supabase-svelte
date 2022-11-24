@@ -14,7 +14,7 @@ export function processData(matchResults, predictionResults, matchStages): void
   var leaderboardPredictMatchesScorePlusWinner = {};
   var leaderboardPredictMatchesWinner = {};
   var leaderboardPredictMatchesLost = {};
-  var predictParticipationTrack = {};
+  
   var leaderboardTotalPredicts = {};
   var allPredictions = [];
   var upcomingPredictions = [];
@@ -22,7 +22,7 @@ export function processData(matchResults, predictionResults, matchStages): void
   var keyOptions = [];
 
 
-  //iterate through the matchStages defined under /js/games/*.js
+  //iterate through the matchStages defined under config.js
   //and initalize the keyOptions
   matchStages.forEach((value, index, array) => {
       if (keyOptions.length === 0) {
@@ -45,35 +45,32 @@ export function processData(matchResults, predictionResults, matchStages): void
   //stage number starts from 1, after processing if 
   //activeStageMatchNumber is zero that means all the matches
   //are completed.
-  var activeStageMatchNumber = 0;
-  var activeStageYetToStart = false;
-  var activeStageYetToEnd = false;
-  var tournamentStillOn = false;
-  var today = new Date();
+  let activeStageMatchNumber = 0;
+  let activeStageYetToStart = false;
+  let activeStageYetToEnd = false;
+  let tournamentStillOn = false;
+  let today = new Date();
+  //console.log("processPoints: ", matchStages);
   for (var i = 0; i < matchStages.length; i++) {
-    var dDiff = Date.parse(matchStages[i].StageEndDate) - today.getTime();
-    var diffDays = Math.ceil(dDiff / (1000 * 3600 * 24));
-    //console.log("Today",today, "stage end date", matchStages[i].StageEndDate, "Diff days", diffDays);
+    let dDiffEndDate = Date.parse(matchStages[i].StageEndDate) - today.getTime();
+    let diffDaysEndDate = Math.ceil(dDiffEndDate / (1000 * 3600 * 24));
+
+    let dDiffStartDate = Date.parse(matchStages[i].StageEndDate) - today.getTime();
+    let diffDaysStartDate = Math.ceil(dDiffStartDate / (1000 * 3600 * 24));
+
     //if diffDays is -ve that means match was completed.
     //if diffDays is zero or +ve that means match is yet to happen.
-    if (diffDays >= 0) {
+    if (diffDaysEndDate >= 0) {
       activeStageMatchNumber = matchStages[i].MatchNumber;
-      break;
-    }
-  }
 
-  //set flag to indicate if tournament is still running.
-  if (activeStageMatchNumber !== 0) {
-    tournamentStillOn = true;
-    
-    var activeStageStartDate = Date.parse(matchStages[activeStageMatchNumber].StageStartDate);
-    var activeStageEndDate = Date.parse(matchStages[activeStageMatchNumber].StageEndDate);
-    if (today.getTime() < activeStageStartDate) {
-      activeStageYetToStart = true;
-    }
-
-    if (today.getTime() <= activeStageEndDate){
+      //set flag to indicate if tournament is still running.
+      tournamentStillOn = true;
       activeStageYetToEnd = true;
+
+      if (diffDaysStartDate >= 0 ) {
+        activeStageYetToStart = true;
+      }
+      break;
     }
   }
 
@@ -86,11 +83,6 @@ export function processData(matchResults, predictionResults, matchStages): void
     var row = predictionResults[i];
     var currentMatchNo = row.matchnumber;
 
-    if (isNaN(predictParticipationTrack[currentMatchNo-1])) {
-      predictParticipationTrack[currentMatchNo-1] = 1;
-    } else {
-      predictParticipationTrack[currentMatchNo-1]++;
-    }
     //set new match flag. new match flag this is used to ensure that match name
     //is displayed once in the row where as participants names are shown seperatly
     if (lastMatchNo !== currentMatchNo) {
