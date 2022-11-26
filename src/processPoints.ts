@@ -77,7 +77,6 @@ export function processData(matchResults, predictionResults, matchStages): void
   var lastMatchNo = 0;
   var newMatch = false;
   var isUpcoming = false;
-  var upComingMatchCount = 0;
 
   for (var i = predictionResults.length - 1; i >= 0; i--) {
     var row = predictionResults[i];
@@ -85,6 +84,9 @@ export function processData(matchResults, predictionResults, matchStages): void
 
     //set new match flag. new match flag this is used to ensure that match name
     //is displayed once in the row where as participants names are shown seperatly
+    //TODO: The logic now is to rely on the array index to identify if it is a new match
+    //this need to change because we can't rely on that fact that the query will return matches in any order.
+    //and such dependencies are hard to troubleshoot.
     if (lastMatchNo !== currentMatchNo) {
       newMatch = true;
       isUpcoming = false;
@@ -117,10 +119,8 @@ export function processData(matchResults, predictionResults, matchStages): void
     var predictTeamAName = teamNameAcronymn[matchResultTeamAName];
     var predictTeamBName = teamNameAcronymn[matchResultTeamBName];
     
-    //console.log("Processing", predictTeamAName, predictTeamBName, matchResultTeamAName, matchResultTeamBName)
-    //add match name
-    //new match flag this is used to ensure that match name
-    //is displayed once in the row
+    //TODO: new match flag is used to populate allpredictions & upcoming matches
+    //This logic needs to change as we depend a lot on array index to find new match.
     if (newMatch) {
       var matchResultTeamAScore = matchResult.resulta;
       var matchResultTeamBScore = matchResult.resultb;
@@ -147,7 +147,9 @@ export function processData(matchResults, predictionResults, matchStages): void
           }            
         }
         matchComplete = true;
+        
         if (!"True".localeCompare(matchStages[currentMatchStage].IsFinal)) {
+          //TODO: Check if we really need this set this in the middle.
           tournamentStillOn = false;
         }
       } else {
@@ -157,13 +159,11 @@ export function processData(matchResults, predictionResults, matchStages): void
         //show that in upcoming section.
         if (diffDays <= 2) {
           isUpcoming = true;
-          upComingMatchCount++;
         } else if ( (currentMatchStage === activeStageMatchNumber) 
               && ((activeStageYetToStart === true) 
               || (activeStageYetToEnd === true))
           ) {
           isUpcoming = true;
-          upComingMatchCount++;
         }
         matchResultEval = {
           teamA: {name: predictTeamAName},

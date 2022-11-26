@@ -194,7 +194,7 @@
             View Leaderboard
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
 3
-              <span class="visually-hidden">3 tournaments</span></span>
+              <span class="visually-hidden">{tournaments.length} tournaments</span></span>
           </a>
           <ul class="dropdown-menu">
             {#each tournaments as tName}
