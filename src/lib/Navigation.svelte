@@ -22,30 +22,54 @@
       tournamentsData: null,
       profileData: null,
       processed: false,
+      tribeData: null,
     };
 
     function loadDataFromSupabase() {
       const getResults = async () => {
         try {
             {
+              //pull all the tournaments
               const { data, error, status } = await supabase
                 .from('tournaments')
                 .select('tournament')
-                .neq('tournament', 'Euro Cup 2020') //TODO: exclude untill the prediction table is fixed
                   
               if (error && status !== 406) throw error
               response.tournamentsData = data;
             }
 
             {
+              //pull all the participants in my tribe
+              const { data, error, status } = await supabase
+                .from('tribes')
+                .select(`name, desc, tribemember(participant_id)`)
+                  
+              if (error && status !== 406) throw error
+              response.tribeData = data;
+            }
+            
+            {
+              //create the list of profiles to pull the information
+              const tribeMembers = [uuid];
+              response.tribeData.forEach(row => {
+                row.tribemember.forEach(particpant => {
+                  if (tribeMembers.indexOf(particpant.participant_id) === -1) {
+                    tribeMembers.push(particpant.participant_id);
+                  }
+                });
+              });
+              
+              //pull all the participants in my tribe
               const { data, error, status } = await supabase
                 .from('profiles')
                 .select('id, full_name, avatar_url')
+                .in('id', tribeMembers)
                   
               if (error && status !== 406) throw error
               response.profileData = data;
-            }
+            }            
           } catch (error) {
+            response.processed = false;
             console.error("Error:", error);
           } finally {
             //no-op
@@ -60,7 +84,6 @@
           qParticipants[pProfile.id] = {full_name: pProfile.full_name, avatar_url: pProfile.avatar_url}
         })
         storeParticipants.set(qParticipants);
-        //console.log("Navigation output: ", response, qParticipants);
       }).catch(console.log)
     }
 
@@ -77,7 +100,7 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
   <div class="container px-3">
     <a class="navbar-brand fw-bold" href="#app" on:click={changePage}>KOTAS</a>
-    {#if (response.processed) && (response.profileData.length > 0)}    
+    {#if (response.processed) && (response.profileData?.length > 0)}    
     <div class="nav-item dropdown">
       <!-- svelte-ignore a11y-missing-attribute -->
       <a class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" 
