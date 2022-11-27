@@ -386,7 +386,7 @@
     <!-- Toast which shows the success status -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <Toasts />
-    </div>    
+    </div>
   {:else if response.processed == false}
   <Loading />
   {:else if response.predictData?.length == 0}

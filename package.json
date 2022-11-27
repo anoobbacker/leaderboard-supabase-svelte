@@ -2,7 +2,7 @@
   "name": "leaderboard-supabase-svelte",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://anoobbacker.github.io/betwc",
+  "homepage": "https://anoobbacker.github.io/leaderboard-supabase-svelte",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

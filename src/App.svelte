@@ -1,6 +1,5 @@
 <script lang="ts">
   import Navigation from "./lib/Navigation.svelte";
-  import Header from "./lib/Header.svelte";
   import LeaderBoards from "./lib/LeaderBoards.svelte";
   import Avatars from "./lib/Avatars.svelte";
   import Footer from "./lib/Footer.svelte";
@@ -12,6 +11,7 @@
   import type { AuthSession } from '@supabase/supabase-js'
   import Login from "./lib/Login.svelte";
   import {storeLoggedUID} from "./store"
+    import Groups from "./lib/Groups.svelte";
 
   let currentPage;
   storeCurrentPage.subscribe(value => {
@@ -35,15 +35,19 @@
 <Navigation />
 
 {#if !session}
-<!-- Show login page if not authenticated -->
-<Login />
-{:else if currentPage === 'Predict'}
-  <!-- Show prediction page -->
-  <Predict {session} />
+  <!-- Show login page if not authenticated -->
+  <Login />
 {:else}
-  <!-- Load leaderboard -->
-  <Header />
-  <LeaderBoards />
+  {#if currentPage === 'Predict'}
+    <!-- Show prediction page -->
+    <Predict {session} />
+  {:else if currentPage === 'Group'}
+    <!-- Show group specific page -->
+    <Groups />
+  {:else}
+    <!-- Load leaderboard -->
+    <LeaderBoards />
+  {/if}
 {/if}
 
 <Avatars />

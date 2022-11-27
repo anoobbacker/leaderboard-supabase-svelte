@@ -2,10 +2,12 @@ import { writable } from 'svelte/store';
 import { GameTournaments } from './config';
 
 export const storeCurrentPage = writable('Home');
+export const storeCurrentGroup = writable('');
 export const storeLoggedUID = writable({});
 export const storeTournament = writable(GameTournaments.WorldCup2022);
 export const storeTournaments = writable([]);
 export const storeParticipants = writable({});
+export const storeGroups = writable({});
 
 export const storeLeaderboard = writable({})
 export const storeCountScorePlusWin = writable({})

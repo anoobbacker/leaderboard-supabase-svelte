@@ -8,8 +8,6 @@ This can be used as the dashboard for a fun social leaderboard between friends.
 
 https://user-images.githubusercontent.com/13219906/203117361-3c3d61ad-739e-452e-aeaa-dae996f223bb.mp4
 
-
-
 ## Recommended IDE Setup
 
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
@@ -24,12 +22,11 @@ Fork this project and peform the following steps to customize it for you and you
 6. Replace you tribe name from `Kotas` to something else starting from `index.html` & other `*.svelte`.
 
 # To do
-- Add support multiple tribes or groups
 - Improve the documentation
-- Improve the code to make it modular, reusable, configurable
+- Add support multiple tribes or groups
 - Add support for localization
 - Add unit tests
-- Integrate with DevOps CI/CD
+- Improve the code modularity
 
 # Screenshots
 To be udpated
