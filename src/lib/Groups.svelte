@@ -63,18 +63,18 @@
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-6">
           <h2>Groups</h2>
         </div>
-        <div class="col-sm-7">
+        <div class="col-sm-6">
           {#if participants[uuid].is_admin}
-          <button type="button" class="btn btn-primary add-new"
-          on:click={() => addGroup('group', 'participantid')}>
-            <i class="bi bi-plus-lg"></i> Add new group
+          <button type="button" class="btn btn-primary btn-sm mb-1"
+            on:click={() => addGroup('group', 'participantid')}>
+            <i class="bi bi-plus-lg"></i> Add group
           </button>
-          <button type="button" class="btn btn-primary add-new" 
-          on:click={() => addMember('group', 'participantid')}>
-            <i class="bi bi-plus-lg"></i> Add new member
+          <button type="button" class="btn btn-primary btn-sm" 
+            on:click={() => addMember('group', 'participantid')}>
+            <i class="bi bi-plus-lg"></i> Add member
           </button>
           {/if}
         </div>
@@ -117,6 +117,4 @@
   </div>
 </div>
 <!-- Toast which shows the success status -->
-<div class="toast-container position-fixed top-0 end-0 p-3">
-  <Toasts />
-</div>
+<Toasts />

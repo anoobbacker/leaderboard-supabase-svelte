@@ -5,6 +5,7 @@ export const storeCurrentPage = writable('Home');
 export const storeCurrentGroup = writable('');
 export const storeLoggedUID = writable({});
 export const storeTournament = writable(GameTournaments.WorldCup2022);
+export const storeCurrentStage = writable(0);
 export const storeTournaments = writable([]);
 export const storeParticipants = writable({});
 export const storeGroups = writable({});
