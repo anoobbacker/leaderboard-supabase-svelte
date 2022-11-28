@@ -4,8 +4,9 @@ export const GameTournaments = {
       matchStages: [
         //Groupstage match day1
         {
-          MatchNumber: 1,
-          Desc: 'Groupstage first match',
+          StartMatchNumber: 1,
+          EndMatchNumber: 16,
+          Desc: 'MATCHDAY ONE',
           StageStartDate: 'June 14, 2018',
           StageEndDate: 'June 19, 2018',
           Stage: 0,
@@ -15,8 +16,9 @@ export const GameTournaments = {
         },
         //Groupstage match day2
         {
-          MatchNumber: 17,
-          Desc: 'Groupstage second match',
+          StartMatchNumber: 17,
+          EndMatchNumber: 32,
+          Desc: 'MATCHDAY TWO',
           StageStartDate: 'June 19, 2018',
           StageEndDate: 'June 24, 2018',
           Stage: 1,
@@ -26,8 +28,9 @@ export const GameTournaments = {
         },
         //Groupstage match day3
         {
-          MatchNumber: 31,
-          Desc: 'Groupstage thrid match',
+          StartMatchNumber: 33,
+          EndMatchNumber: 48,
+          Desc: 'MATCHDAY THREE',
           StageStartDate: 'June 25, 2018',
           StageEndDate: 'June 28, 2018',
           Stage: 2,
@@ -37,8 +40,9 @@ export const GameTournaments = {
         },
         //round 16
         {
-          MatchNumber: 49,
-          Desc: 'Round of 16',
+          StartMatchNumber: 49,
+          EndMatchNumber: 56,
+          Desc: 'ROUND OF 16',
           StageStartDate: 'June 30, 2018',
           StageEndDate: 'July 3, 2018',
           Stage: 3,
@@ -48,8 +52,9 @@ export const GameTournaments = {
         },
         //quarter finals
         {
-          MatchNumber: 57,
-          Desc: 'Quarter finals',
+          StartMatchNumber: 57,
+          EndMatchNumber: 60,
+          Desc: 'QUARTER-FINALS',
           StageStartDate: 'July 6, 2018',
           StageEndDate: 'July 7, 2018',
           Stage: 4,
@@ -59,8 +64,9 @@ export const GameTournaments = {
         },
         //semi finals
         {
-          MatchNumber: 61,
-          Desc: 'Semi finals',
+          StartMatchNumber: 61,
+          EndMatchNumber: 62,
+          Desc: 'SEMI-FINALS',
           StageStartDate: 'July 10, 2018',
           StageEndDate: 'July 12, 2018',
           Stage: 5,
@@ -70,8 +76,9 @@ export const GameTournaments = {
         },
         //winner & loser finals
         {
-          MatchNumber: 63,
-          Desc: 'Finals',
+          StartMatchNumber: 63,
+          EndMatchNumber: 64,
+          Desc: 'FINALS',
           StageStartDate: 'July 14, 2018',
           StageEndDate: 'July 15, 2018',
           Stage: 6,
@@ -87,8 +94,9 @@ export const GameTournaments = {
       matchStages: [
         {
           //stage1
-          MatchNumber: 1,
-          Desc: 'Groupstage',
+          StartMatchNumber: 1,
+          EndMatchNumber: 36,
+          Desc: 'GROUP-STAGE',
           StageStartDate: 'June 11, 2021',
           StageEndDate: 'June 23, 2021',
           Stage: 0,
@@ -98,8 +106,9 @@ export const GameTournaments = {
         },
         {
           //round of 16
-          MatchNumber: 37,
-          Desc: 'Round of 16',
+          StartMatchNumber: 37,
+          EndMatchNumber: 44,
+          Desc: 'ROUND OF 16',
           StageStartDate: 'June 26, 2021',
           StageEndDate: 'June 30, 2021',
           Stage: 1,
@@ -109,8 +118,9 @@ export const GameTournaments = {
         },
         {
           //quarter-finals
-          MatchNumber: 45,
-          Desc: 'Quarter finals',
+          StartMatchNumber: 45,
+          EndMatchNumber: 48,
+          Desc: 'QUARTER-FINALS',
           StageStartDate: 'July 2, 2021',
           StageEndDate: 'July 4, 2021',
           Stage: 2,
@@ -120,8 +130,9 @@ export const GameTournaments = {
         },
         {
           //semi-finals
-          MatchNumber: 49,
-          Desc: 'Semi finals',
+          StartMatchNumber: 49,
+          EndMatchNumber: 50,
+          Desc: 'SEMI-FINALS',
           StageStartDate: 'July 7, 2021',
           StageEndDate: 'July 8, 2021',
           Stage: 3,
@@ -131,8 +142,9 @@ export const GameTournaments = {
         },
         {
           //finals
-          MatchNumber: 51,
-          Desc: 'Finals',
+          StartMatchNumber: 51,
+          EndMatchNumber: 51,
+          Desc: 'FINALS',
           StageStartDate: 'July 12, 2021',
           StageEndDate: 'July 12, 2021',
           Stage: 4,
@@ -148,8 +160,9 @@ export const GameTournaments = {
       matchStages: [
         //Groupstage match day1
         {
-          MatchNumber: 1,
-          Desc: 'Groupstage first match',
+          StartMatchNumber: 1,
+          EndMatchNumber: 16,
+          Desc: 'MATCHDAY ONE',
           StageStartDate: 'November 21, 2022',
           StageEndDate: 'November 24, 2022',
           Stage: 1,
@@ -159,8 +172,9 @@ export const GameTournaments = {
         },
         //Groupstage match day2
         {
-          MatchNumber: 17,
-          Desc: 'Groupstage second match',
+          StartMatchNumber: 17,
+          EndMatchNumber: 32,
+          Desc: 'MATCHDAY TWO',
           StageStartDate: 'November 25, 2022',
           StageEndDate: 'November 28, 2022',
           Stage: 2,
@@ -170,8 +184,9 @@ export const GameTournaments = {
         },
         //Groupstage match day3
         {
-          MatchNumber: 34,
-          Desc: 'Groupstage thrid match',
+          StartMatchNumber: 33,
+          EndMatchNumber: 48,
+          Desc: 'MATCHDAY THREE',
           StageStartDate: 'November 29, 2022',
           StageEndDate: 'December 2, 2022',
           Stage: 3,
@@ -181,8 +196,9 @@ export const GameTournaments = {
         },
         //round 16
         {
-          MatchNumber: 50,
-          Desc: 'Round of 16',
+          StartMatchNumber: 49,
+          EndMatchNumber: 56,
+          Desc: 'ROUND OF 16',
           StageStartDate: 'December 3, 2022',
           StageEndDate: 'December 6, 2022',
           Stage: 4,
@@ -192,8 +208,9 @@ export const GameTournaments = {
         },
         //quarter finals
         {
-          MatchNumber: 58,
-          Desc: 'Quarter finals',
+          StartMatchNumber: 57,
+          EndMatchNumber: 60,
+          Desc: 'QUARTER-FINALS',
           StageStartDate: 'December 9, 2022',
           StageEndDate: 'December 10, 2022',
           Stage: 5,
@@ -203,8 +220,9 @@ export const GameTournaments = {
         },
         //semi finals
         {
-          MatchNumber: 62,
-          Desc: 'Semi finals',
+          StartMatchNumber: 61,
+          EndMatchNumber: 62,
+          Desc: 'SEMI-FINALS',
           StageStartDate: 'December 13, 2022',
           StageEndDate: 'December 14, 2022',
           Stage: 6,
@@ -214,8 +232,9 @@ export const GameTournaments = {
         },
         //winner & loser finals
         {
-          MatchNumber: 64,
-          Desc: 'Finals',
+          StartMatchNumber: 63,
+          EndMatchNumber: 64,
+          Desc: 'FINALS',
           StageStartDate: 'December 17, 2022',
           StageEndDate: 'December 18, 2022',
           Stage: 7,

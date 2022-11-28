@@ -2,6 +2,7 @@ import {teamNameAcronymn} from "./config";
 import {storeLeaderboard, storeCountScorePlusWin, storeCountWins, 
   storeCountLost, storeMatchScorePlusWin, storeMatchWin, storeMatchLoss,
   storeTotalPredicts, storeAllGames, storeUpcomingGames, storeSortedLeaderNames,
+  storeCurrentStage
 } from "./store";
 
 
@@ -46,6 +47,7 @@ export function processData(matchResults, predictionResults, matchStages): void
   //activeStageMatchNumber is zero that means all the matches
   //are completed.
   let activeStageMatchNumber = 0;
+  let activeStage = matchStages.length;
   let activeStageYetToStart = false;
   let activeStageYetToEnd = false;
   let tournamentStillOn = false;
@@ -61,7 +63,8 @@ export function processData(matchResults, predictionResults, matchStages): void
     //if diffDays is -ve that means match was completed.
     //if diffDays is zero or +ve that means match is yet to happen.
     if (diffDaysEndDate >= 0) {
-      activeStageMatchNumber = matchStages[i].MatchNumber;
+      activeStageMatchNumber = matchStages[i].StartMatchNumber;
+      activeStage = matchStages[i].Stage;
 
       //set flag to indicate if tournament is still running.
       tournamentStillOn = true;
@@ -74,33 +77,92 @@ export function processData(matchResults, predictionResults, matchStages): void
     }
   }
 
-  var lastMatchNo = 0;
-  var newMatch = false;
-  var isUpcoming = false;
+  matchResults.forEach((matchResult,matchResultIndex) => {
+    //actual result
+    let matchResultEval = allPredictions[matchResultIndex]?.match;
 
-  for (var i = predictionResults.length - 1; i >= 0; i--) {
-    var row = predictionResults[i];
-    var currentMatchNo = row.matchnumber;
-
-    //set new match flag. new match flag this is used to ensure that match name
-    //is displayed once in the row where as participants names are shown seperatly
-    //TODO: The logic now is to rely on the array index to identify if it is a new match
-    //this need to change because we can't rely on that fact that the query will return matches in any order.
-    //and such dependencies are hard to troubleshoot.
-    if (lastMatchNo !== currentMatchNo) {
-      newMatch = true;
-      isUpcoming = false;
+    let matchResultTeamAName = (matchResult.teama === "") ? "TBD" : matchResult.teama;
+    let matchResultTeamBName = (matchResult.teamb === "") ? "TBD" : matchResult.teamb;
+    
+    let teamAName = teamNameAcronymn[matchResultTeamAName];
+    let teamBName = teamNameAcronymn[matchResultTeamBName];
+    
+    //TODO: new match flag is used to populate allpredictions & upcoming matches
+    //This logic needs to change as we depend a lot on array index to find new match.
+    let matchResultTeamAScore = matchResult.resulta;
+    let matchResultTeamBScore = matchResult.resultb;
+    let matchResultStatus = matchResult.status;
+    let isUpcoming = false;
+    if ("Complete".localeCompare(matchResultStatus) === 0) {
+      if (matchResultTeamAScore > matchResultTeamBScore) {
+        matchResultEval = {
+            teamA: {name: teamAName, score: matchResultTeamAScore, result: 'win'},
+            teamB: {name: teamBName, score: matchResultTeamBScore, result: 'lost'},
+            result: 'A-win'
+        }
+      } else if (matchResultTeamAScore < matchResultTeamBScore) {
+        matchResultEval = {
+            teamA: {name: teamAName, score: matchResultTeamAScore, result: 'lost'},
+            teamB: {name: teamBName, score: matchResultTeamBScore, result: 'win'},
+            result: 'B-win'
+        }          
+      } else {
+        matchResultEval = {
+            teamA: {name: teamAName, score: matchResultTeamAScore, result: 'draw'},
+            teamB: {name: teamBName, score: matchResultTeamBScore, result: 'draw'},
+            result: 'draw'
+        }            
+      }
     } else {
-      newMatch = false;
+      var matchDateDiff = Math.abs(Date.parse(matchResultStatus.trim()) - (new Date()).getTime());
+      var diffDays = Math.ceil(matchDateDiff / (1000 * 3600 * 24));
+      //if the match is going to happen in the next x days 
+      //show that in upcoming section.
+      let notComplete = '❌'
+      if (diffDays <= 2) {
+        isUpcoming = true;
+        notComplete = '📅';
+      } else if ( ((matchResultIndex+1) >= activeStageMatchNumber) 
+            && ((activeStageYetToStart === true) 
+            || (activeStageYetToEnd === true))
+        ) {
+        isUpcoming = true;
+        notComplete = '📅';
+      }
+      matchResultEval = {
+        teamA: {name: teamAName},
+        teamB: {name: teamBName},
+        result: notComplete
+      };
     }
-    lastMatchNo = currentMatchNo;
-      
-    //set the current match stage by reading stages defined in js/games/*.js
+
+    //set match result only once.
+    allPredictions[matchResultIndex] = { 
+        match: matchResultEval,
+        predict: {} 
+    };
+    
+    if (isUpcoming && tournamentStillOn) {
+        upcomingPredictions[matchResultIndex] = { 
+            match: matchResultEval,
+            predict: {} 
+        };
+    }
+  });
+
+  let lastMatchNo = 0;
+  let newMatch = false;
+  
+  for (var i = predictionResults.length - 1; i >= 0; i--) {
+    let row = predictionResults[i];
+    let currentMatchNo = row.matchnumber;
+     
+    //set the current match stage by reading stages defined in config.js
     //set default currentMatchStage to last match stage to ensure that if we
     //don't match the if-condition inside for loop, it means last stage.
-    var currentMatchStage = matchStages.length - 1;
+    let currentMatchStage = matchStages.length - 1;
     for (var x = 0; x < matchStages.length; x++) {
-      if (currentMatchNo < matchStages[x].MatchNumber) {
+      if (currentMatchNo < matchStages[x].StartMatchNumber) {
         currentMatchStage = matchStages[x].Stage - 1;
         break;
       }
@@ -111,80 +173,8 @@ export function processData(matchResults, predictionResults, matchStages): void
 
     //actual result
     var matchResultEval = allPredictions[currentMatchNo-1]?.match;
-    var matchResult = matchResults[currentMatchNo-1];
-
-    var matchResultTeamAName = (matchResult.teama === "") ? "TBD" : matchResult.teama;
-    var matchResultTeamBName = (matchResult.teamb === "") ? "TBD" : matchResult.teamb;
-    
-    var predictTeamAName = teamNameAcronymn[matchResultTeamAName];
-    var predictTeamBName = teamNameAcronymn[matchResultTeamBName];
-    
-    //TODO: new match flag is used to populate allpredictions & upcoming matches
-    //This logic needs to change as we depend a lot on array index to find new match.
-    if (newMatch) {
-      var matchResultTeamAScore = matchResult.resulta;
-      var matchResultTeamBScore = matchResult.resultb;
-      var matchResultStatus = matchResult.status;
-      var matchComplete = false;
-      if ("Complete".localeCompare(matchResultStatus) === 0) {
-        if (matchResultTeamAScore > matchResultTeamBScore) {
-          matchResultEval = {
-              teamA: {name: predictTeamAName, score: matchResultTeamAScore, result: 'win'},
-              teamB: {name: predictTeamBName, score: matchResultTeamBScore, result: 'lost'},
-              result: 'A-win'
-          }
-        } else if (matchResultTeamAScore < matchResultTeamBScore) {
-          matchResultEval = {
-              teamA: {name: predictTeamAName, score: matchResultTeamAScore, result: 'lost'},
-              teamB: {name: predictTeamBName, score: matchResultTeamBScore, result: 'win'},
-              result: 'B-win'
-          }          
-        } else {
-          matchResultEval = {
-              teamA: {name: predictTeamAName, score: matchResultTeamAScore, result: 'draw'},
-              teamB: {name: predictTeamBName, score: matchResultTeamBScore, result: 'draw'},
-              result: 'draw'
-          }            
-        }
-        matchComplete = true;
-        
-        if (!"True".localeCompare(matchStages[currentMatchStage].IsFinal)) {
-          //TODO: Check if we really need this set this in the middle.
-          tournamentStillOn = false;
-        }
-      } else {
-        var matchDateDiff = Math.abs(Date.parse(matchResultStatus.trim()) - (new Date()).getTime());
-        var diffDays = Math.ceil(matchDateDiff / (1000 * 3600 * 24));
-        //if the match is going to happen in the next x days 
-        //show that in upcoming section.
-        if (diffDays <= 2) {
-          isUpcoming = true;
-        } else if ( (currentMatchStage === activeStageMatchNumber) 
-              && ((activeStageYetToStart === true) 
-              || (activeStageYetToEnd === true))
-          ) {
-          isUpcoming = true;
-        }
-        matchResultEval = {
-          teamA: {name: predictTeamAName},
-          teamB: {name: predictTeamBName},
-          result: '📅'
-        };
-      }
-
-      //set match result only once.
-      allPredictions[currentMatchNo-1] = { 
-          match: matchResultEval,
-          predict: {} 
-      };
-      
-      if (isUpcoming && tournamentStillOn) {
-          upcomingPredictions[currentMatchNo-1] = { 
-              match: matchResultEval,
-              predict: {} 
-          };
-      }
-    }
+    let matchResultTeamAScore = matchResultEval.teamA.score;
+    let matchResultTeamBScore = matchResultEval.teamB.score;
 
     //predict
     var predictTeamAScore = row.resulta;
@@ -206,7 +196,7 @@ export function processData(matchResults, predictionResults, matchStages): void
       }
     } else if ( (null === predictTeamAScore) || isNaN(predictTeamAScore) ||
                 (null === predictTeamBScore) || isNaN(predictTeamBScore)) {
-      if ( isUpcoming ) {
+      if ( matchResultEval.result === '📅' ) {
         predictEval = {
           type: '📅'
         }
@@ -290,7 +280,8 @@ export function processData(matchResults, predictionResults, matchStages): void
       }
     }
 
-    if (matchComplete) {
+    //if match got completed
+    if (matchResultEval.result !== '📅') {
       leaderboard[participantName] += predictPoints;
 
       if (predictPoints >= matchStages[currentMatchStage].WinnerOnlyPoints) {
@@ -318,7 +309,7 @@ export function processData(matchResults, predictionResults, matchStages): void
     
     //add particpant's prediction.
     allPredictions[currentMatchNo-1].predict[participantName] = predictEval;
-    if (isUpcoming && tournamentStillOn) {
+    if ((matchResultEval.result === '📅') && tournamentStillOn) {
       upcomingPredictions[currentMatchNo-1].predict[participantName] = predictEval;
     }
     if ('📅' !== matchResultEval.result) {
@@ -334,6 +325,11 @@ export function processData(matchResults, predictionResults, matchStages): void
         // compares (the keys) by their respective values.
         return leaderboard[b] - leaderboard[a];
   })
+
+
+  //If active stage number will be final stage if the tournament is over.
+  storeCurrentStage.set(activeStage);
+  //console.log("Active Stage Number", activeStageMatchNumber);
 
   storeLeaderboard.set(leaderboard);
   //console.log("Leaderboard", leaderboard);

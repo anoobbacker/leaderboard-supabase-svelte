@@ -34,7 +34,7 @@
       tribeData: null,
     };
 
-    let activeGroupName;
+    let selectedGroupName = currentgroup;
 
     function loadDataFromSupabase() {
       const getResults = async () => {
@@ -61,7 +61,7 @@
               response.tribeData = data;
             }
             
-            {
+            if ( uuid !== null) {
               //create the list of profiles to pull the information
               const tribeMembers = [uuid];
               response.tribeData.forEach(row => {
@@ -126,7 +126,7 @@
     }
 
     function changeGroup(e) {
-      storeCurrentGroup.set(activeGroupName);
+      storeCurrentGroup.set(selectedGroupName);
     }
 
     onMount(() => {
@@ -144,7 +144,7 @@
 <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
   <div class="container px-3">
     <!-- Show the website name and on click change it to home page -->
-    <a class="navbar-brand fw-bold" href="#app" on:click={() => changePage('Home')}>KOTAS</a>
+    <a class="navbar-brand fw-bold" href="#app" on:click={() => changePage('Home')}>KOTAS.CLUB</a>
     <!-- Top right avatar drop-down -->
     <div class="nav-item dropdown">
         <!-- svelte-ignore a11y-missing-attribute -->
@@ -210,10 +210,10 @@
       </div>
       <div class="modal-body">
         <label for="chooseGroupName">Choose a group name:</label>
-        <select id="chooseGroupName" class="form-select mb-3" bind:value={activeGroupName}>
+        <select id="chooseGroupName" class="form-select mb-3" bind:value={selectedGroupName}>
           {#each Object.keys(groups) as groupName}
-          {#if currentgroup === groupName}
-          <option value={groupName} selected>{groupName}</option>
+          {#if currentgroup.trim() === groupName.trim()}
+          <option value={groupName} selected>{groupName} (selected)</option>
           {:else}
           <option value={groupName}>{groupName}</option>
           {/if}
