@@ -11,12 +11,13 @@
     export let session: AuthSession
     
     let response = {
-      tournamentsData: null,
       resultData: null,
       predictData: null,
       processed: false,
+      matchNumbers: [],
       changePredict: {},
       matchDatetime: {},
+      flagName: {},
     };
 
     let uuid;
@@ -30,6 +31,7 @@
     });
 
     function loadDataFromSupabase() {
+      let maxlimit = 10;
       const getResults = async () => {
         try {
           {
@@ -38,22 +40,44 @@
                 .select('matchnumber, teama, teamb, status, matchdate')
                 .eq('tournament', tournament.name)
                 .neq('status','Complete')
+                .neq('teama', 'TBD')
+                .neq('teamb', 'TBD')
                 .order('matchnumber', {ascending: true})
-                .limit(10)
+                .limit(maxlimit)
                   
               if (error && status !== 406) throw error
               response.resultData = data;
             }
+          } catch (error) {
+            console.error("Error:", error);
+          } finally {
+            //no-op
+          }
+      }
+      const getPredicts = async () => {
+        try {
             {
-              const { data, error, status } = await supabase
-                .from('predicts')
-                .select('matchnumber, resulta, resultb')
-                .eq('tournament', tournament.name)
-                .eq('participant', uuid)
-                .order('matchnumber', {ascending: true})
-                  
-              if (error && status !== 406) throw error
-              response.predictData = data;
+
+              //numeric sort
+              response.matchNumbers.sort(function(a, b){return a - b});
+              let upcomingMatchLen = response.matchNumbers.length;
+              if ( upcomingMatchLen > 0 ) {
+                let min = response.matchNumbers[0];
+                let max = response.matchNumbers[upcomingMatchLen-1];
+
+                const { data, error, status } = await supabase
+                  .from('predicts')
+                  .select('matchnumber, resulta, resultb')
+                  .eq('tournament', tournament.name)
+                  .eq('participant', uuid)
+                  .gte('matchnumber', min)
+                  .lte('matchnumber', max)
+                  .order('matchnumber', {ascending: true})
+                  .limit(maxlimit)
+                    
+                if (error && status !== 406) throw error
+                response.predictData = data;
+              }
             }
           } catch (error) {
             console.error("Error:", error);
@@ -66,36 +90,45 @@
         response.resultData.forEach((result) => {
           let datetimeString: Date = new Date(result.matchdate.replace("-","").trim() + " GMT+0530")
           let matchnumber: number = result.matchnumber;
+          response.matchNumbers.push(matchnumber); //used in prediction query below.
           response.matchDatetime[matchnumber] = datetimeString; //used to disable the button
-          //console.log("Date", matchnumber, datetimeString)
-        });
-
-        response.predictData.forEach((result) => {
-          let matchnumber: number = result.matchnumber;
-          let resultTeamA: number = result.resulta;
-          let resultTeamB: number = result.resultb;
-          response.changePredict[matchnumber] = {
-            resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
-            resultb: resultTeamB, 
-            last_resulta: resultTeamA, //value retrieved from DB
-            last_resultb: resultTeamB,
-            submit: false, //capture if value changed from last value, used for enabling button. 
-            submitted: false, //capture if the changed value got saved
-            avalidation: 'default', //to indicated if the changed prediction has errors
-            bvalidation: 'default',
-            response: {
-              loading: false,
-              statusMsg: '',
-              status: -1,
-              error: null,
-              lastOperationStatus: '',
-              processed: false,
-            },
+          let fa = (result.teama === '' ? 'TBD' : result.teama)
+          let fb = (result.teamb === '' ? 'TBD' : result.teamb)
+          response.flagName[matchnumber] = {
+            teama: team2LetterAcronym[fa],
+            teamb: team2LetterAcronym[fb],
           }
+        });
+          
+        const p2 = getPredicts();
+        p2.then(() => {
+          response.predictData.forEach((result) => {
+            let matchnumber: number = result.matchnumber;
+            let resultTeamA: number = result.resulta;
+            let resultTeamB: number = result.resultb;
+            response.changePredict[matchnumber] = {
+              resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
+              resultb: resultTeamB, 
+              last_resulta: resultTeamA, //value retrieved from DB
+              last_resultb: resultTeamB,
+              submit: false, //capture if value changed from last value, used for enabling button. 
+              submitted: false, //capture if the changed value got saved
+              avalidation: 'default', //to indicated if the changed prediction has errors
+              bvalidation: 'default',
+              response: {
+                loading: false,
+                statusMsg: '',
+                status: -1,
+                error: null,
+                lastOperationStatus: '',
+                processed: false,
+              },
+            }          
+          })
           response.processed = true;
-        })
-        //console.log("Output: ", tournament, uuid, response);
-      }).catch(console.log)      
+          console.log("Predict:", response);
+        }).catch(console.log)
+      }).catch(console.log)
     }
 
     onMount(() => {
@@ -300,7 +333,7 @@
         {#each response.resultData as result, index}
         <score-predictor class="align-middle gap-2 mb-4">
           <div class="team-wrapper align-middle">
-            <img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teama] + '.svg'} 
+            <img src={'/assets/img/country-flags-main/' + response.flagName[result.matchnumber]?.teama + '.svg'} 
             width='25em' 
             alt="{result.teama}"/> 
             <span>{teamNameAcronymn[result.teama]}</span>            
@@ -308,11 +341,11 @@
           <div class="score-predictor-controls align-middle">
             {#if (result.status == 'Complete') 
                   || (Date.now() > response.matchDatetime[result.matchnumber])}
-              {#if (response.predictData[result.matchnumber-1].resulta == null) 
-                   || (response.predictData[result.matchnumber-1].resulta < 0)}
+              {#if (response.changePredict[result.matchnumber].resulta == null) 
+                   || (response.changePredict[result.matchnumber].resulta < 0)}
               ➖
               {:else}
-              <div class="fw-bold fs-2 text-center">{response.predictData[result.matchnumber-1].resulta}</div>              
+              <div class="fw-bold fs-2 text-center">{response.changePredict[result.matchnumber].resulta}</div>              
               {/if}
             {:else}
             <button class="score-predictor-number-button-up btn-light"
@@ -337,10 +370,10 @@
           <div class="fw-bold text-center align-middle">-</div>
           <div class="score-predictor-controls align-middle">
             {#if (result.status == 'Complete') || (Date.now() > response.matchDatetime[result.matchnumber]) }
-              {#if (response.predictData[result.matchnumber-1].resultb == null) || (response.predictData[result.matchnumber-1].resultb < 0)}
+              {#if (response.changePredict[result.matchnumber].resultb == null) || (response.changePredict[result.matchnumber].resultb < 0)}
               ➖
               {:else}
-              <div class="fw-bold fs-2 text-center mb-1">{response.predictData[result.matchnumber-1].resultb}</div>
+              <div class="fw-bold fs-2 text-center mb-1">{response.changePredict[result.matchnumber].resultb}</div>
               {/if}
             {:else}
               <button class="score-predictor-number-button-up btn-light"
@@ -363,15 +396,15 @@
             {/if}
           </div>
           <div class="team-wrapper">
-            <img src={'/assets/img/country-flags-main/' + team2LetterAcronym[result.teamb] + '.svg'} 
+            <img src={'/assets/img/country-flags-main/' + response.flagName[result.matchnumber]?.teamb  + '.svg'} 
             width='25em' 
             alt="{result.teamb}"/>
             <span>{teamNameAcronymn[result.teamb]}</span>
           </div>
           <div class="align-middle text-center">
             {#if (result.status != 'Complete') && (Date.now() <= response.matchDatetime[result.matchnumber])}
-            <button id="{result.matchnumber}" type="button" class="btn {response.changePredict[result.matchnumber].submit ? 'btn-primary' : 'btn-outline-light'}" 
-            on:click={() => saveScore(result.matchnumber)} disabled="{response.changePredict[result.matchnumber].submit === false}">Save</button>
+            <button id="{result.matchnumber}" type="button" class="btn {response.changePredict[result.matchnumber]?.submit ? 'btn-primary' : 'btn-outline-light'}" 
+            on:click={() => saveScore(result.matchnumber)} disabled="{response.changePredict[result.matchnumber]?.submit === false}">Save</button>
             {:else if (result.status != 'Complete') }
             <!-- don't show save button, instead show that match is on-going -->
             <p class="fs-2 text-center">⏱</p>
