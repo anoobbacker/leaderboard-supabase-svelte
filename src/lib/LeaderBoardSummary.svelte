@@ -9,7 +9,7 @@
 <div class="section-heading text-center pt-3 pb-3">
   <h2>Leader Board - {tournament.name}</h2>
   <p class="text-muted">Leader board shows the overrall points of the participants.</p>
-  <table class="table table-condensed ">
+  <table class="table table-condensed align-middle">
       <thead>
           <tr>
               <th colSpan='2'>Name</th>
@@ -20,7 +20,7 @@
           {#each sortedLeaderNames as pName}
           <tr>
             <td align="right">
-              <img class="rounded" src={participants[pName].avatar_url} alt="Avatar images" width="30" />
+              <img class="rounded" src={participants[pName].avatar_url} alt="Avatar images" width="48em" />
             </td>
             <td align="left">{participants[pName].full_name}</td>
             <td class="text-center">

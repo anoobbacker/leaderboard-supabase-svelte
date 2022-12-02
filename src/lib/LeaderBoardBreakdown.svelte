@@ -10,7 +10,7 @@
   <h2>Leader Board break down</h2>
   <p class="text-muted">Shows the leader board details. To see all the predictions scroll down to 'All predictions' section.</p>
   <br/>
-  <table class="table table-condensed">
+  <table class="table table-condensed align-middle">
     <thead>
         <tr><th colSpan='2'>Name</th><th>🎯Perfect scores</th>
             <th>✅Only Winner</th><th>❌Lost</th>
