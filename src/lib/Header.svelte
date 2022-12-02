@@ -5,99 +5,99 @@
 </script>
 
 <header class="masthead">
-    <div class="container px-5">
-      <div class="row gx-5 align-items-center">
-        <div class="col-lg" id="games-menu">
-            <div class="container">
-              <div class="row gap-1">
-                <h1 class="display-1 lh-1 mb-3">Kotas Prediction Leaderboard.</h1>
-                <p class="lead fw-normal text-muted mb-3">A fun friendly football prediction leaderboard! 🤞</p>
+  <div class="container px-1">
+    <div class="row gx-1 align-items-center gap-3">
+      <div class="col-lg">
+          <div class="container">
+            <div class="row gap-1">
+              <h1 class="display-1 lh-1 mb-3">Kotas Prediction Leaderboard.</h1>
+              <p class="lead fw-normal text-muted mb-3">A fun friendly football prediction leaderboard! 🤞</p>
+            </div>
+            <div class="row gap-1">
+              <table class="text-muted table-condensed mb-3">
+                <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>🎯 Prefect score points</th>
+                    <th>✅ Only winner points</th>
+                    <th>❌Wrong points</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Till 16s</td>
+                        <td class="text-center">3</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">0</td>
+                    </tr>
+                    <tr>
+                        <td>Quaterfinals</td>
+                        <td class="text-center">5</td>
+                        <td class="text-center">3</td>
+                        <td class="text-center">-1</td>
+                    </tr>
+                    <tr>
+                        <td>Semifinals</td>
+                        <td class="text-center">15</td>
+                        <td class="text-center">5</td>
+                        <td class="text-center">-5</td>
+                    </tr>
+                    <tr>
+                        <td>Finals</td>
+                        <td class="text-center">40</td>
+                        <td class="text-center">15</td>
+                        <td class="text-center">-10</td>
+                    </tr>
+                </tbody> 
+            </table>
+            </div>
+            <div class="row gap-1">
+              <div class="dropdown col-lg">
+                <a 
+                  class="dropdown-toggle btn btn-secondary" href="#leaderboards" 
+                  tabIndex="0" role="button" type="button"
+                  data-bs-toggle="dropdown" data-bs-target="#leaderboardDropdown" 
+                  aria-controls="leaderboardDropdown" aria-expanded="false" aria-label="Select tournament">
+                  View Leaderboard
+                </a>
+                <div class="dropdown-menu shadow animated--grow-in" id="leaderboardDropdown"
+                      aria-labelledby="leaderboardDropdown">
+                  {#each tournaments as tName}
+                  <a class="dropdown-item" href="#leaderboards" 
+                      on:click={switchTournament}>{tName.tournament}</a>
+                  {/each}
+                </div>
               </div>
-              <div class="row gap-1">
-                <table class="text-muted table-condensed mb-3">
-                  <thead>
-                  <tr>
-                      <th>Round</th>
-                      <th>🎯 Prefect score points</th>
-                      <th>✅ Only winner points</th>
-                      <th>❌Wrong points</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Till 16s</td>
-                          <td class="text-center">3</td>
-                          <td class="text-center">1</td>
-                          <td class="text-center">0</td>
-                      </tr>
-                      <tr>
-                          <td>Quaterfinals</td>
-                          <td class="text-center">5</td>
-                          <td class="text-center">3</td>
-                          <td class="text-center">-1</td>
-                      </tr>
-                      <tr>
-                          <td>Semifinals</td>
-                          <td class="text-center">15</td>
-                          <td class="text-center">5</td>
-                          <td class="text-center">-5</td>
-                      </tr>
-                      <tr>
-                          <td>Finals</td>
-                          <td class="text-center">40</td>
-                          <td class="text-center">15</td>
-                          <td class="text-center">-10</td>
-                      </tr>
-                  </tbody> 
-              </table>
+              <div class="col-lg">
+                <a type="button" role="button" class="btn btn-primary" href="#app" on:click={() => storeCurrentPage.set('Predict')}>My prediction</a>
               </div>
-              <div class="row gap-1">
-                <div class="dropdown col-lg">
-                  <a 
-                    class="dropdown-toggle btn btn-secondary" href="#leaderboards" 
-                    tabIndex="0" role="button" type="button"
-                    data-bs-toggle="dropdown" data-bs-target="#leaderboardDropdown" 
-                    aria-controls="leaderboardDropdown" aria-expanded="false" aria-label="Select tournament">
-                    View Leaderboard
-                  </a>
-                  <div class="dropdown-menu shadow animated--grow-in" id="leaderboardDropdown"
-                        aria-labelledby="leaderboardDropdown">
-                    {#each tournaments as tName}
-                    <a class="dropdown-item" href="#leaderboards" 
-                        on:click={switchTournament}>{tName.tournament}</a>
-                    {/each}
+            </div>
+          </div>
+      </div>
+      <div class="col-lg">
+        <!-- Masthead device mockup feature-->
+        <div class="masthead-device-mockup">
+          <svg class="circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                  <linearGradient id="circleGradient" gradientTransform="rotate(45)">
+                      <stop class="gradient-start-color" offset="0%"></stop>
+                      <stop class="gradient-end-color" offset="100%"></stop>
+                  </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="50"></circle></svg>
+              <svg class="shape-1 d-none d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(120.42 -49.88) rotate(45)"></rect>
+                  <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(-49.88 120.42) rotate(-45)"></rect></svg><svg class="shape-2 d-none d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle>
+          </svg>
+          <div class="device-wrapper">
+              <div class="device" data-device="iPhoneX" data-orientation="portrait" data-color="black">
+                  <div class="screen bg-black">
+                      <video muted autoplay loop style="max-width: 100%; height: 100%"><source src="/assets/img/demo.mp4" type="video/mp4" /></video>
                   </div>
-                </div>
-                <div class="col-lg">
-                  <a type="button" role="button" class="btn btn-primary" href="#app" on:click={() => storeCurrentPage.set('Predict')}>My prediction</a>
-                </div>
               </div>
-            </div>
-        </div>
-        <div class="col-lg">
-            <!-- Masthead device mockup feature-->
-            <div class="masthead-device-mockup">
-                <svg class="circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="circleGradient" gradientTransform="rotate(45)">
-                            <stop class="gradient-start-color" offset="0%"></stop>
-                            <stop class="gradient-end-color" offset="100%"></stop>
-                        </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="50"></circle></svg>
-                    <svg class="shape-1 d-none d-sm-block" viewBox="0 0 240.83 240.83" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(120.42 -49.88) rotate(45)"></rect>
-                        <rect x="-32.54" y="78.39" width="305.92" height="84.05" rx="42.03" transform="translate(-49.88 120.42) rotate(-45)"></rect></svg><svg class="shape-2 d-none d-sm-block" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"></circle>
-                    </svg>
-                <div class="device-wrapper">
-                    <div class="device" data-device="iPhoneX" data-orientation="portrait" data-color="black">
-                        <div class="screen bg-black">
-                            <video muted autoplay loop style="max-width: 100%; height: 100%"><source src="/assets/img/demo.mp4" type="video/mp4" /></video>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
   </header>

@@ -98,6 +98,25 @@
             teama: team2LetterAcronym[fa],
             teamb: team2LetterAcronym[fb],
           }
+          response.changePredict[matchnumber] = {
+              indb: false,
+              resulta: null, //value retrieved from DB but gets changed based on UI input
+              resultb: null, 
+              last_resulta: null, //value retrieved from DB
+              last_resultb: null,
+              submit: false, //capture if value changed from last value, used for enabling button. 
+              submitted: false, //capture if the changed value got saved
+              avalidation: 'default', //to indicated if the changed prediction has errors
+              bvalidation: 'default',
+              response: {
+                loading: false,
+                statusMsg: '',
+                status: -1,
+                error: null,
+                lastOperationStatus: '',
+                processed: false,
+              },
+            };
         });
           
         const p2 = getPredicts();
@@ -107,6 +126,7 @@
             let resultTeamA: number = result.resulta;
             let resultTeamB: number = result.resultb;
             response.changePredict[matchnumber] = {
+              indb: true,
               resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
               resultb: resultTeamB, 
               last_resulta: resultTeamA, //value retrieved from DB
@@ -123,10 +143,9 @@
                 lastOperationStatus: '',
                 processed: false,
               },
-            }          
+            };       
           })
           response.processed = true;
-          console.log("Predict:", response);
         }).catch(console.log)
       }).catch(console.log)
     }
@@ -151,37 +170,37 @@
       usub2();
     });
     
-    const addPrediction = async (matchnumber) => {
+    const addPrediction = async (mNum) => {
           try {
-            response.changePredict[matchnumber].response.loading = true;
-            response.changePredict[matchnumber].response.processed = false;
+            response.changePredict[mNum].response.loading = true;
+            response.changePredict[mNum].response.processed = false;
             const { user } = session
     
             const row = {
-              resulta: response.changePredict[matchnumber].resulta,
-              resultb: response.changePredict[matchnumber].resultb,
+              matchnumber: mNum,
+              resulta: response.changePredict[mNum].resulta,
+              resultb: response.changePredict[mNum].resultb,
+              tournament: tournament.name,
             }
-            //console.log("Inserting row:", row);
      
             const { data, error, status } = await supabase
               .from('predicts')
-              .update(row)
-              .eq('matchnumber', matchnumber)
+              .upsert(row)
             
-            response.changePredict[matchnumber].response.status = status;
-            response.changePredict[matchnumber].response.error = error;
+            response.changePredict[mNum].response.status = status;
+            response.changePredict[mNum].response.error = error;
       
             if (error && status !== 406) throw error
-            response.changePredict[matchnumber].submitted = true;
+            response.changePredict[mNum].submitted = true;
           } catch (error) {
             console.error("Error:", error);
             if (error instanceof Error) {
-              response.changePredict[matchnumber].response.statusMsg = error.message;
+              response.changePredict[mNum].response.statusMsg = error.message;
             }
-            response.changePredict[matchnumber].response.lastOperationStatus = 'failed';
-            response.changePredict[matchnumber].submitted = false;
+            response.changePredict[mNum].response.lastOperationStatus = 'failed';
+            response.changePredict[mNum].submitted = false;
           } finally {
-            response.changePredict[matchnumber].response.loading = false
+            response.changePredict[mNum].response.loading = false
           }
     }
 
@@ -455,14 +474,6 @@
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-  }
-  .score-predictor-number-input {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 80px;
-    min-width: 60px;
-    text-align: center;
   }
   .score-predictor-number-button-up {
     border-radius: 8px 8px 0px 0px;
