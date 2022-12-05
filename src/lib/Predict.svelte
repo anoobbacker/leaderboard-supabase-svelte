@@ -5,15 +5,25 @@
     import { storeTournament, storeLoggedUID, addToast } from "../store";
     import {GameTournaments, team2LetterAcronym, teamNameAcronymn} from "../config";
     import Sorry from './Sorry.svelte';
+    import ErrorMessage from './ErrorMessage.svelte';
     import Loading from './Loading.svelte';
     import Toasts from './Toasts.svelte';
   
     export let session: AuthSession
     
+    enum QueryReponse {
+      YetToStart, //0
+      Failed, //1
+      Success, //2
+      Inprogress, //3
+    }
+
     let response = {
       resultData: null,
       predictData: null,
-      processed: false,
+      resultsResponse: QueryReponse.YetToStart,
+      predictResponse:  QueryReponse.YetToStart,
+      changePredictResponse: QueryReponse.YetToStart,
       matchNumbers: [],
       changePredict: {},
       matchDatetime: {},
@@ -34,53 +44,52 @@
       let maxlimit = 10;
       const getResults = async () => {
         try {
-          {
-              const { data, error, status } = await supabase
-                .from('results')
-                .select('matchnumber, teama, teamb, status, matchdate')
-                .eq('tournament', tournament.name)
-                .neq('status','Complete')
-                .neq('teama', 'TBD')
-                .neq('teamb', 'TBD')
-                .order('matchnumber', {ascending: true})
-                .limit(maxlimit)
-                  
-              if (error && status !== 406) throw error
-              response.resultData = data;
-            }
+          response.resultsResponse = QueryReponse.Inprogress;
+          const { data, error, status } = await supabase
+            .from('results')
+            .select('matchnumber, teama, teamb, status, matchdate')
+            .eq('tournament', tournament.name)
+            .neq('status','Complete')
+            .neq('teama', 'TBD')
+            .neq('teamb', 'TBD')
+            .order('matchnumber', {ascending: true})
+            .limit(maxlimit)
+              
+          if (error && status !== 406) throw error
+          response.resultData = data;            
           } catch (error) {
             console.error("Error:", error);
+            response.resultsResponse = QueryReponse.Failed;
           } finally {
             //no-op
           }
       }
       const getPredicts = async () => {
-        try {
-            {
+        try {            
+          //numeric sort
+          response.matchNumbers.sort(function(a, b){return a - b});
+          let upcomingMatchLen = response.matchNumbers.length;
+          if ( upcomingMatchLen > 0 ) {
+            let min = response.matchNumbers[0];
+            let max = response.matchNumbers[upcomingMatchLen-1];
 
-              //numeric sort
-              response.matchNumbers.sort(function(a, b){return a - b});
-              let upcomingMatchLen = response.matchNumbers.length;
-              if ( upcomingMatchLen > 0 ) {
-                let min = response.matchNumbers[0];
-                let max = response.matchNumbers[upcomingMatchLen-1];
-
-                const { data, error, status } = await supabase
-                  .from('predicts')
-                  .select('id, matchnumber, resulta, resultb')
-                  .eq('tournament', tournament.name)
-                  .eq('participant', uuid)
-                  .gte('matchnumber', min)
-                  .lte('matchnumber', max)
-                  .order('matchnumber', {ascending: true})
-                  .limit(maxlimit)
-                    
-                if (error && status !== 406) throw error
-                response.predictData = data;
-              }
+            response.predictResponse = QueryReponse.Inprogress;
+            const { data, error, status } = await supabase
+              .from('predicts')
+              .select('id, matchnumber, resulta, resultb')
+              .eq('tournament', tournament.name)
+              .eq('participant', uuid)
+              .gte('matchnumber', min)
+              .lte('matchnumber', max)
+              .order('matchnumber', {ascending: true})
+              .limit(maxlimit)
+                
+            if (error && status !== 406) throw error
+            response.predictData = data;              
             }
           } catch (error) {
             console.error("Error:", error);
+            response.predictResponse = QueryReponse.Failed;
           } finally {
             //no-op
           }
@@ -119,7 +128,8 @@
               },
             };
         });
-          
+        response.resultsResponse = QueryReponse.Success;
+
         const p2 = getPredicts();
         p2.then(() => {
           response.predictData.forEach((result) => {
@@ -147,9 +157,16 @@
               },
             };       
           })
-          response.processed = true;
-        }).catch(console.log)
-      }).catch(console.log)
+          response.predictResponse = QueryReponse.Success;
+          console.log("Response: ", response)
+        }).catch((e) => {
+          console.error("Error:", e);
+          response.predictResponse = QueryReponse.Failed;
+        })
+      }).catch((e) => {
+        console.error("Error:", e)
+        response.resultsResponse = QueryReponse.Failed;
+      })
     }
 
     onMount(() => {
@@ -190,6 +207,7 @@
               row[`id`] = response.changePredict[mNum].id;
             }
             
+            response.changePredictResponse = QueryReponse.Inprogress;
             const { data, error, status } = await supabase
               .from('predicts')
               .upsert(row)
@@ -236,7 +254,7 @@
           type: response.changePredict[matchnumber].response.lastOperationStatus, 
           dismissible: true, 
           timeout: 3000});
-        //console.log("Add prediction: ", responseAddPredictData, response)
+        response.changePredictResponse = QueryReponse.Success;
       }).catch((error) => {
         response.changePredict[matchnumber].response.processed = true;
         response.changePredict[matchnumber].submit = false;
@@ -247,9 +265,8 @@
           type: response.changePredict[matchnumber].response.lastOperationStatus, 
           dismissible: true, 
           timeout: 3000});
-        //console.log("Save score:", response.changePredict)
+        response.changePredictResponse = QueryReponse.Failed;
       })
-      //console.log("Console:", matchnumber, response.changePredict[matchnumber]);
     }
 
     function increaseTeamAScore(matchnumber: number)
@@ -354,7 +371,7 @@
   <div class="container pt-2">
     <h2>Predictions</h2>
     <p class="text-muted">Enter your predictions for upcoming matches (limited to a maximum of 10 matches.)</p>
-    {#if response.processed && (response.resultData.length > 0) && (response.predictData?.length > 0) }
+    {#if (response.predictResponse === QueryReponse.Success) && (response.resultsResponse === QueryReponse.Success) && (response.resultData?.length > 0) && (response.changePredict !== null) }
     <div class="container-fluid">
         {#each response.resultData as result, index}
         <score-predictor class="align-middle gap-2 mb-4">
@@ -446,9 +463,12 @@
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <Toasts />
     </div>
-  {:else if response.processed == false}
+  {:else if (response.predictResponse === QueryReponse.Inprogress) || (response.resultsResponse === QueryReponse.Inprogress)}
   <Loading />
-  {:else if response.predictData?.length == 0}
+  {:else if (response.predictResponse === QueryReponse.Failed) || (response.resultsResponse === QueryReponse.Failed)}
+  <!-- TODO: Provide more error details -->
+  <ErrorMessage />
+  {:else}
   <Sorry />
   {/if}
   </div>
