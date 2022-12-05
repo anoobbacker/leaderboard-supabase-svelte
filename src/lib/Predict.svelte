@@ -67,7 +67,7 @@
 
                 const { data, error, status } = await supabase
                   .from('predicts')
-                  .select('matchnumber, resulta, resultb')
+                  .select('id, matchnumber, resulta, resultb')
                   .eq('tournament', tournament.name)
                   .eq('participant', uuid)
                   .gte('matchnumber', min)
@@ -100,6 +100,7 @@
           }
           response.changePredict[matchnumber] = {
               indb: false,
+              id: null,
               resulta: null, //value retrieved from DB but gets changed based on UI input
               resultb: null, 
               last_resulta: null, //value retrieved from DB
@@ -127,6 +128,7 @@
             let resultTeamB: number = result.resultb;
             response.changePredict[matchnumber] = {
               indb: true,
+              id: result.id,
               resulta: resultTeamA, //value retrieved from DB but gets changed based on UI input
               resultb: resultTeamB, 
               last_resulta: resultTeamA, //value retrieved from DB
@@ -177,12 +179,17 @@
             const { user } = session
     
             const row = {
+              tournament: tournament.name,
               matchnumber: mNum,
               resulta: response.changePredict[mNum].resulta,
               resultb: response.changePredict[mNum].resultb,
-              tournament: tournament.name,
             }
-     
+
+            //to remove null for id and handle cases where no prediction was existing
+            if (response.changePredict[mNum].id !== null )  {
+              row[`id`] = response.changePredict[mNum].id;
+            }
+            
             const { data, error, status } = await supabase
               .from('predicts')
               .upsert(row)

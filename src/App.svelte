@@ -11,7 +11,8 @@
   import type { AuthSession } from '@supabase/supabase-js'
   import Login from "./lib/Login.svelte";
   import {storeLoggedUID} from "./store"
-    import Groups from "./lib/Groups.svelte";
+  import Groups from "./lib/Groups.svelte";
+  import Loading from "./lib/Loading.svelte";
 
   let currentPage;
   storeCurrentPage.subscribe(value => {
@@ -19,11 +20,13 @@
 	});
 
   let session: AuthSession
+  let checkingSession = true;
 
   onMount(() => {
     supabase.auth.getSession().then(({ data }) => {
       session = data.session
       storeLoggedUID.set(session?.user?.id);
+      checkingSession = false;
     })
 
     supabase.auth.onAuthStateChange((_event, _session) => {
@@ -35,8 +38,12 @@
 <Navigation />
 
 {#if !session}
+  {#if checkingSession}
+  <Loading />
+  {:else}
   <!-- Show login page if not authenticated -->
   <Login />
+  {/if}
 {:else}
   {#if currentPage === 'Predict'}
     <!-- Show prediction page -->

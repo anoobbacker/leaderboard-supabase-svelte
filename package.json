@@ -10,18 +10,24 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "predeploy": "npm run build",
-    "deploy": "npx gh-pages -d dist"
+    "deploy": "npx gh-pages -d dist",
+    "test": "vitest run src",
+    "test:watch": "vitest src"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.1.0",
+    "@sveltejs/vite-plugin-svelte": "^1.4.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/svelte": "^3.2.2",
     "@tsconfig/svelte": "^3.0.0",
     "gh-pages": "^4.0.0",
+    "jsdom": "^20.0.3",
     "svelte": "^3.52.0",
     "svelte-check": "^2.9.2",
     "svelte-preprocess": "^4.10.7",
     "tslib": "^2.4.0",
     "typescript": "^4.6.4",
-    "vite": "^3.2.3"
+    "vite": "^3.2.4",
+    "vitest": "^0.25.3"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.1.0"
