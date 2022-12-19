@@ -1,27 +1,31 @@
 <script lang="ts">
     import { supabase } from '../supabaseClient'
-  
-    let loading = false
-    let signedUpTried = false;
-    let signUpFailed = false;
+
+    enum QueryReponse {
+      YetToStart, //0
+      Failed, //1
+      Success, //2
+      Inprogress, //3
+    }
+
+    let response = {
+      status: QueryReponse.YetToStart,
+      message: '',
+    }
     let email = ''
-    let emailSubmissionStatus = '';
   
     const handleLogin = async () => {
       try {
-        loading = true;
-        signedUpTried = true;
+        response = { status: QueryReponse.Inprogress, message: ''};
         const { error } = await supabase.auth.signInWithOtp({ email })
         if (error) throw error
-        emailSubmissionStatus = 'Check your email for login link!';
-        signUpFailed = false;
+        response = { status: QueryReponse.Success, message: 'Check your email for login link!'};
       } catch (error) {
         if (error instanceof Error) {
-          emailSubmissionStatus = error.message;
-          signUpFailed = true;
+          response = { status: QueryReponse.Failed, message: error.message};
         }
       } finally {
-        loading = false
+        //nop
       }
     }
   </script>
@@ -41,12 +45,12 @@
                   bind:value="{email}"
               />
               <button type="submit" class="btn btn-primary px-4 gap-3" 
-                  aria-live="polite" disabled="{loading}">
-                  <span>{loading ? 'Sending magic link' : 'Send magic link'}</span>
+                  aria-live="polite" disabled="{response.status === QueryReponse.Inprogress}">
+                  <span>{response.status === QueryReponse.Inprogress ? 'Sending magic link' : 'Send magic link'}</span>
               </button>
           </form>
-          {#if signedUpTried && (emailSubmissionStatus.length > 0)}
-            <p class={signUpFailed ? 'text-danger' : 'text-success'}>{emailSubmissionStatus}</p>
+          {#if (response.status === QueryReponse.Failed) || (response.status === QueryReponse.Success)}
+            <p class={response.status === QueryReponse.Failed ? 'text-danger' : 'text-success'}>{response.message}</p>
           {/if}
         </div>
       </div>
