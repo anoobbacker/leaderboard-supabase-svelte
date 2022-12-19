@@ -9,7 +9,7 @@ export const GameTournaments = {
           Desc: 'MATCHDAY ONE',
           StageStartDate: 'June 14, 2018',
           StageEndDate: 'June 19, 2018',
-          Stage: 0,
+          Stage: 1,
           ScoreAndWinnerPoints: 3,
           WinnerOnlyPoints: 1,
           LostPoints: 0
@@ -21,7 +21,7 @@ export const GameTournaments = {
           Desc: 'MATCHDAY TWO',
           StageStartDate: 'June 19, 2018',
           StageEndDate: 'June 24, 2018',
-          Stage: 1,
+          Stage: 2,
           ScoreAndWinnerPoints: 3,
           WinnerOnlyPoints: 1,
           LostPoints: 0
@@ -33,7 +33,7 @@ export const GameTournaments = {
           Desc: 'MATCHDAY THREE',
           StageStartDate: 'June 25, 2018',
           StageEndDate: 'June 28, 2018',
-          Stage: 2,
+          Stage: 3,
           ScoreAndWinnerPoints: 3,
           WinnerOnlyPoints: 1,
           LostPoints: 0
@@ -45,7 +45,7 @@ export const GameTournaments = {
           Desc: 'ROUND OF 16',
           StageStartDate: 'June 30, 2018',
           StageEndDate: 'July 3, 2018',
-          Stage: 3,
+          Stage: 4,
           ScoreAndWinnerPoints: 3,
           WinnerOnlyPoints: 1,
           LostPoints: 0
@@ -57,7 +57,7 @@ export const GameTournaments = {
           Desc: 'QUARTER-FINALS',
           StageStartDate: 'July 6, 2018',
           StageEndDate: 'July 7, 2018',
-          Stage: 4,
+          Stage: 5,
           ScoreAndWinnerPoints: 5,
           WinnerOnlyPoints: 3,
           LostPoints: -1
@@ -69,19 +69,32 @@ export const GameTournaments = {
           Desc: 'SEMI-FINALS',
           StageStartDate: 'July 10, 2018',
           StageEndDate: 'July 12, 2018',
-          Stage: 5,
+          Stage: 6,
           ScoreAndWinnerPoints: 15,
           WinnerOnlyPoints: 5,
           LostPoints: -5
         },
-        //winner & loser finals
+        //loser finals
         {
           StartMatchNumber: 63,
-          EndMatchNumber: 64,
-          Desc: 'FINALS',
+          EndMatchNumber: 63,
+          Desc: 'THIRD-PLACE',
           StageStartDate: 'July 14, 2018',
+          StageEndDate: 'July 14, 2018',
+          Stage: 7,
+          ScoreAndWinnerPoints: 40,
+          WinnerOnlyPoints: 15,
+          LostPoints: -10,
+          IsFinal: 'True'
+        },
+        //winner & loser finals
+        {
+          StartMatchNumber: 64,
+          EndMatchNumber: 64,
+          Desc: 'FINAL',
+          StageStartDate: 'July 15, 2018',
           StageEndDate: 'July 15, 2018',
-          Stage: 6,
+          Stage: 8,
           ScoreAndWinnerPoints: 40,
           WinnerOnlyPoints: 15,
           LostPoints: -10,
@@ -230,14 +243,27 @@ export const GameTournaments = {
           WinnerOnlyPoints: 5,
           LostPoints: -5
         },
-        //winner & loser finals
+        //loser finals
         {
           StartMatchNumber: 63,
-          EndMatchNumber: 64,
-          Desc: 'FINALS',
+          EndMatchNumber: 63,
+          Desc: 'THIRD-PLACE',
           StageStartDate: 'December 17, 2022',
-          StageEndDate: 'December 18, 2022',
+          StageEndDate: 'December 17, 2022',
           Stage: 7,
+          ScoreAndWinnerPoints: 40,
+          WinnerOnlyPoints: 15,
+          LostPoints: -10,
+          IsFinal: 'True'
+        },
+        //finals
+        {
+          StartMatchNumber: 64,
+          EndMatchNumber: 64,
+          Desc: 'FINAL',
+          StageStartDate: 'December 18, 2022',
+          StageEndDate: 'December 18, 2022',
+          Stage: 8,
           ScoreAndWinnerPoints: 40,
           WinnerOnlyPoints: 15,
           LostPoints: -10,

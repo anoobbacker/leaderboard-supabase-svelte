@@ -96,7 +96,7 @@
       }
       const p1 = getResults();
       p1.then(() => {
-        response.resultData.forEach((result) => {
+        response.resultData?.forEach((result) => {
           let datetimeString: Date = new Date(result.matchdate.replace("-","").trim() + " GMT+0530")
           let matchnumber: number = result.matchnumber;
           response.matchNumbers.push(matchnumber); //used in prediction query below.
@@ -132,7 +132,7 @@
 
         const p2 = getPredicts();
         p2.then(() => {
-          response.predictData.forEach((result) => {
+          response.predictData?.forEach((result) => {
             let matchnumber: number = result.matchnumber;
             let resultTeamA: number = result.resulta;
             let resultTeamB: number = result.resultb;
@@ -158,7 +158,6 @@
             };       
           })
           response.predictResponse = QueryReponse.Success;
-          console.log("Response: ", response)
         }).catch((e) => {
           console.error("Error:", e);
           response.predictResponse = QueryReponse.Failed;
@@ -367,11 +366,11 @@
     }
   </script>
   
+{#if (response.predictResponse === QueryReponse.Success) && (response.resultsResponse === QueryReponse.Success) && (response.resultData?.length > 0) && (response.changePredict !== null) }
 <section id="predictions">
   <div class="container pt-2">
     <h2>Predictions</h2>
     <p class="text-muted">Enter your predictions for upcoming matches (limited to a maximum of 10 matches.)</p>
-    {#if (response.predictResponse === QueryReponse.Success) && (response.resultsResponse === QueryReponse.Success) && (response.resultData?.length > 0) && (response.changePredict !== null) }
     <div class="container-fluid">
         {#each response.resultData as result, index}
         <score-predictor class="align-middle gap-2 mb-4">
@@ -463,17 +462,28 @@
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <Toasts />
     </div>
-  {:else if (response.predictResponse === QueryReponse.Inprogress) || (response.resultsResponse === QueryReponse.Inprogress)}
-  <Loading />
-  {:else if (response.predictResponse === QueryReponse.Failed) || (response.resultsResponse === QueryReponse.Failed)}
-  <!-- TODO: Provide more error details -->
-  <ErrorMessage />
-  {:else}
-  <Sorry />
-  {/if}
   </div>
-
 </section>
+{:else if (response.predictResponse === QueryReponse.Inprogress) || (response.resultsResponse === QueryReponse.Inprogress)}
+<Loading />
+{:else if (response.predictResponse === QueryReponse.Failed) || (response.resultsResponse === QueryReponse.Failed)}
+<!-- TODO: Provide more error details -->
+<ErrorMessage />
+{:else if (response.predictResponse === QueryReponse.Success) && (response.resultsResponse === QueryReponse.Success)}
+<div class="cover-container d-flex text-center p-3 flex-column">
+  <div class="row min-vh-100" >
+    <div class="d-flex align-items-center">
+      <div class="mx-auto">
+        <h1 class="display-5 fw-bold">Kotas Prediction Leaderboard</h1>
+        <p class="lead mb-4">No upcoming predictions.</p>
+        <img class="rounded w-25 p-3" src="/assets/img/404.png" alt="404" />
+      </div>
+    </div>
+  </div>
+</div>
+{:else}
+<Sorry />
+{/if}
   
 <style lang="postcss">
   score-predictor {

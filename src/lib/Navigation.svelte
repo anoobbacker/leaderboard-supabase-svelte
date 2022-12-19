@@ -121,7 +121,7 @@
         response.processed = true;
       }).catch((e) => {
         response.processed = false;
-        console.log("Navigation: ", e)
+        console.error("Navigation: ", e)
       })
     }
 
